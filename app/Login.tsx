@@ -10,18 +10,35 @@ const Login = () => {
   const { displayName } = useSelector((state: RootState) => state.user);
 
   return (
-    <View>
-      <Text>Login</Text>
-      <TextInput placeholder="Enter username" value={username} onChangeText={setUsername} />
-      <Button
-        title="Next"
-        onPress={() => {
-          dispatch(setDisplayName(username));
-        }}
-      />
-      {displayName && <Text>Welcome, {displayName}!</Text>}
-    </View>
+    <>
+      {!displayName ? (
+        <View style={styles.container}>
+          <Text>Login</Text>
+          <TextInput placeholder="Enter username" value={username} onChangeText={setUsername} />
+          <Button
+            title="Next"
+            onPress={() => {
+              dispatch(setDisplayName(username));
+            }}
+          />
+        </View>
+      ) : (
+        // separator
+
+        <View style={styles.container}>
+          <Text>-----------------------------</Text>
+        </View>
+      )}
+    </>
   );
 };
 
 export default Login;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
