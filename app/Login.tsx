@@ -3,21 +3,39 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setDisplayName, setPin } from "@/redux/userReducer/userReducer";
 import { RootState } from "@/redux/store";
+import { handleRegister } from "@/constants/ApiCall";
+import { router } from "expo-router";
 
 const Login = () => {
   const [username, setUsername] = React.useState<string>("");
   const [number, setNumber] = React.useState<string>("");
   const dispatch = useDispatch();
-  const { displayName } = useSelector((state: RootState) => state.user);
+  const { displayName, hash } = useSelector((state: RootState) => state.user);
 
-  const handlePinSubmit = () => {
+  const handlePinSubmit = async () => {
     if (number.length !== 4) {
       Alert.alert("Invalid PIN", "PIN must be exactly 4 digits");
       return;
     }
-    dispatch(setPin(parseInt(number, 10)));
+    dispatch(setPin(number));
+    await handleRegister({ displayName, pin: number });
   };
-
+  if (hash) {
+    return (
+      <>
+        <View style={styles.container}>
+          <Text>Copy the hash and paste it in the app</Text>
+          <TextInput placeholder="Enter username" value={username} onChangeText={setUsername} />
+          <Button
+            title="Next"
+            onPress={() => {
+              router.push("/(app)");
+            }}
+          />
+        </View>
+      </>
+    );
+  }
   return (
     <>
       {!displayName ? (
