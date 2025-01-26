@@ -1,11 +1,16 @@
-import { Text } from "react-native";
 import { Redirect, Stack } from "expo-router";
 import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { resetStore, RootState } from "@/redux/store";
+import { useEffect } from "react";
 
 export default function AppLayout() {
-  const { displayName } = useSelector((state: RootState) => state.user);
-  if (!displayName) {
+  const { hash } = useSelector((state: RootState) => state.user);
+  // useEffect(() => {
+  //   resetStore();
+  //   return () => {};
+  // }, []);
+
+  if (!hash) {
     return <Redirect href="/login" />;
   }
 

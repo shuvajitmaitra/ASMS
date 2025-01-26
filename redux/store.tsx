@@ -24,3 +24,8 @@ export const persistor = persistStore(store);
 // Type definitions for TypeScript
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+export const resetStore = () => {
+  persistor.purge(); // Clear persisted storage
+  store.dispatch({ type: "RESET_APP" }); // Dispatch a reset action
+};

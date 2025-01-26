@@ -1,13 +1,22 @@
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { Button, StyleSheet, Text, TextInput, View, Alert } from "react-native";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setDisplayName } from "@/redux/userReducer/userReducer";
+import { setDisplayName, setPin } from "@/redux/userReducer/userReducer";
 import { RootState } from "@/redux/store";
 
 const Login = () => {
   const [username, setUsername] = React.useState<string>("");
+  const [number, setNumber] = React.useState<string>("");
   const dispatch = useDispatch();
   const { displayName } = useSelector((state: RootState) => state.user);
+
+  const handlePinSubmit = () => {
+    if (number.length !== 4) {
+      Alert.alert("Invalid PIN", "PIN must be exactly 4 digits");
+      return;
+    }
+    dispatch(setPin(parseInt(number, 10)));
+  };
 
   return (
     <>
@@ -23,10 +32,9 @@ const Login = () => {
           />
         </View>
       ) : (
-        // separator
-
         <View style={styles.container}>
-          <Text>-----------------------------</Text>
+          <TextInput maxLength={4} placeholder="Enter pin" keyboardType="number-pad" value={number} onChangeText={setNumber} />
+          <Button disabled={number.length !== 4} title="Next" onPress={handlePinSubmit} />
         </View>
       )}
     </>

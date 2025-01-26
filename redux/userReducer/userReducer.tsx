@@ -3,22 +3,26 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 // Define the shape of the user state
 export interface UserState {
   displayName: string;
-  email: string;
+  hash: string;
+  pin: number;
 }
 
 // Initial state with type annotation
 const initialState: UserState = {
   displayName: "",
-  email: "",
+  hash: "",
+  pin: 0,
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<{ name: string; email: string }>) => {
-      state.displayName = action.payload.name;
-      state.email = action.payload.email;
+    setPin: (state, action: PayloadAction<number>) => {
+      state.pin = action.payload;
+    },
+    setHash: (state, action: PayloadAction<string>) => {
+      state.hash = action.payload;
     },
     setDisplayName: (state, action: PayloadAction<string>) => {
       state.displayName = action.payload;
@@ -26,6 +30,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser, setDisplayName } = userSlice.actions;
+export const { setPin, setHash, setDisplayName } = userSlice.actions;
 
 export default userSlice.reducer;

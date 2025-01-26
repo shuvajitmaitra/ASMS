@@ -1,10 +1,15 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import userReducer from "../userReducer/userReducer";
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   user: userReducer,
-  // settings: settingsReducer,
-  // add other reducers here
 });
+
+const rootReducer = (state: any, action: any) => {
+  if (action.type === "RESET_APP") {
+    return appReducer(undefined, action);
+  }
+  return appReducer(state, action);
+};
 
 export default rootReducer;
