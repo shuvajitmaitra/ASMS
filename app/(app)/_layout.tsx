@@ -1,8 +1,9 @@
-import { Redirect, Stack } from "expo-router";
+import { Redirect, router, Stack } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { resetStore, RootState } from "@/redux/store";
 import { useEffect } from "react";
 import { setHash } from "@/redux/userReducer/userReducer";
+import Header from "@/components/ui/Header";
 
 export default function AppLayout() {
   const { hash } = useSelector((state: RootState) => state.user);
@@ -21,6 +22,14 @@ export default function AppLayout() {
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="message" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="createchat"
+        options={{
+          presentation: "modal",
+          animation: "slide_from_bottom",
+          header: () => <Header title="Create Chat" onBackPress={() => router.back()} />,
+        }}
+      />
     </Stack>
   );
 }
