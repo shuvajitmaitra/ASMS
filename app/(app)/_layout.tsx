@@ -21,9 +21,9 @@ export default function AppLayout() {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="message" options={{ headerShown: false }} />
+      <Stack.Screen name="message/message" options={{ headerShown: false }} />
       <Stack.Screen
-        name="createchat"
+        name="chat/createchat"
         options={{
           presentation: "modal",
           animation: "slide_from_bottom",
