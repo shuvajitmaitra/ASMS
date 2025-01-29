@@ -34,6 +34,7 @@ type DirectChatData = {
     profilePicture: string;
     isActive: boolean;
   };
+  unreadCount: number;
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -45,11 +46,13 @@ type ChatData = GroupChatData | DirectChatData;
 // Define the shape of the chat state
 interface ChatState {
   chats: ChatData[];
+  selectedChat: ChatData | null;
 }
 
 // Initial state
 const initialState: ChatState = {
   chats: [],
+  selectedChat: null,
 };
 
 const chatSlice = createSlice({
@@ -60,11 +63,15 @@ const chatSlice = createSlice({
       // Set the chats in the state
       state.chats = action.payload;
     },
+    setSelectedChat: (state, action: PayloadAction<ChatData | null>) => {
+      // Set the selected chat in the state
+      state.selectedChat = action.payload;
+    },
   },
 });
 
 // Export actions
-export const { setChats } = chatSlice.actions;
+export const { setChats, setSelectedChat } = chatSlice.actions;
 
 // Export reducer
 export default chatSlice.reducer;
