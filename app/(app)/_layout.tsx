@@ -19,22 +19,29 @@ export default function AppLayout() {
 
   return (
     <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false, statusBarTranslucent: true }} />
+      <Stack.Screen
+        name="index"
+        options={{
+          headerShown: false,
+          statusBarTranslucent: true,
+          contentStyle: { backgroundColor: "red" },
+        }}
+      />
       <Stack.Screen
         name="message/message"
         options={{
           headerShown: false,
-          animation: "slide_from_bottom",
-          presentation: "modal",
+          animation: "fade",
+          contentStyle: { backgroundColor: "blue" },
         }}
       />
       <Stack.Screen name="profile/profile" options={{ headerShown: false }} />
       <Stack.Screen
         name="chat/createchat"
         options={{
-          presentation: "modal",
-          animation: "slide_from_bottom",
-          header: () => <Header title="Create Chat" onBackPress={() => router.back()} />,
+          presentation: "formSheet",
+          contentStyle: { backgroundColor: "transparent" },
+          headerShown: false,
         }}
       />
     </Stack>
