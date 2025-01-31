@@ -71,10 +71,11 @@ const ChatScreen: React.FC = () => {
 
   const renderItem = ({ item }: { item: ChatData }) => (
     <TouchableOpacity onPress={() => handleChatPress(item)} style={styles.chatContainer}>
-      <Image
+      {/* <Image
         source={{ uri: item.isGroupChat ? "https://via.placeholder.com/50" : item.otherUser.profilePicture }}
         style={styles.profileImage}
-      />
+      /> */}
+      <View style={styles.profileImage} />
       <View style={styles.chatDetails}>
         <Text style={styles.chatName}>{item.isGroupChat ? item.chatName : item.otherUser.displayName}</Text>
         {/* Add a placeholder for the last message or status */}
