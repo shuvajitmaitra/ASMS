@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -12,6 +12,8 @@ const MessageScreen = () => {
   const { selectedChat } = useSelector((state: RootState) => state.chat);
   const { top } = useSafeAreaInsets();
   console.log("selectedChat._id", JSON.stringify(selectedChat?._id, null, 2));
+  const [messages, setMessages] = useState([]);
+
   useEffect(() => {
     const getChats = async () => {
       try {
