@@ -31,7 +31,6 @@ interface Message {
 
 const MessageScreen = () => {
   const { selectedChat } = useSelector((state: RootState) => state.chat);
-  // Assuming you store the logged in user in auth.user
   const { hash } = useSelector((state: RootState) => state.user);
   const { top, bottom } = useSafeAreaInsets();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -39,7 +38,6 @@ const MessageScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const flatListRef = useRef<FlatList>(null);
 
-  // Fetch messages when the selected chat changes
   useEffect(() => {
     const fetchMessages = async () => {
       if (!selectedChat?._id) return;
@@ -50,8 +48,6 @@ const MessageScreen = () => {
             chatId: selectedChat._id,
           },
         });
-        // Assuming the API returns an array of messages under "messages"
-        // console.log("response.data", JSON.stringify(response.data.data, null, 2));
         setMessages(response.data.data.reverse());
       } catch (error: any) {
         if (error.response) {
