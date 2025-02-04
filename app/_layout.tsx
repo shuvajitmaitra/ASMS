@@ -9,6 +9,8 @@ import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "@/utils/toastConfig";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -33,6 +35,7 @@ export default function RootLayout() {
       <ThemeProvider value={colorScheme === "light" ? DarkTheme : DefaultTheme}>
         <Slot />
         <StatusBar style="auto" />
+        <Toast config={toastConfig} />
       </ThemeProvider>
     </Provider>
   );
