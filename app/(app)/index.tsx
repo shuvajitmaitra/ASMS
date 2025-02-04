@@ -8,6 +8,7 @@ import { getChats } from "@/constants/ApiCall";
 import { setChats, setSelectedChat } from "@/redux/chatReducer/chatReducer";
 import { RootState } from "@/redux/store";
 import { Colors } from "@/constants/Colors";
+import { StatusBar } from "expo-status-bar";
 
 // Define the type for each chat item
 type UserData = {
@@ -94,6 +95,7 @@ const ChatScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       {/* Header with Search */}
+      <StatusBar />
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Chats</Text>
         <TouchableOpacity onPress={() => router.push("/(app)/profile/profile")}>

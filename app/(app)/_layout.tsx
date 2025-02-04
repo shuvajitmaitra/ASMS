@@ -23,7 +23,6 @@ export default function AppLayout() {
         name="index"
         options={{
           headerShown: false,
-          statusBarTranslucent: true,
           contentStyle: { backgroundColor: "red" },
         }}
       />
@@ -35,7 +34,14 @@ export default function AppLayout() {
           contentStyle: { backgroundColor: "blue" },
         }}
       />
-      <Stack.Screen name="profile/profile" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="profile/profile"
+        options={{
+          headerShown: false,
+          contentStyle: { backgroundColor: "transparent" },
+          presentation: "formSheet",
+        }}
+      />
       <Stack.Screen
         name="chat/createchat"
         options={{
