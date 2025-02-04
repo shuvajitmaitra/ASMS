@@ -6,6 +6,7 @@ import { RootState } from "@/redux/store";
 import { handleRegister } from "@/constants/ApiCall";
 import { router } from "expo-router";
 import InputField from "@/components/ui/InputField";
+import { Colors } from "@/constants/Colors";
 
 const Login = () => {
   const [username, setUsername] = React.useState<string>("");
@@ -57,7 +58,7 @@ const Login = () => {
           dispatch(setDisplayName(username));
         }}
       />
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => router.push("/screens/recover/recover")}>
         <Text>Recover your account</Text>
       </TouchableOpacity>
     </View>
@@ -71,5 +72,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: Colors.bg,
   },
 });

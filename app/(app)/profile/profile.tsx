@@ -1,15 +1,19 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Colors } from "@/constants/Colors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+import Grabber from "@/components/ui/Grabber";
+import { handleLogout } from "@/utils/commonFunction";
 
 const ProfileScreen = () => {
   const { top } = useSafeAreaInsets();
   return (
     <View style={[styles.container, { marginTop: top }]}>
-      <View style={styles.subContainer}>
+      <ScrollView contentContainerStyle={styles.subContainer}>
         <StatusBar />
+        <Grabber />
+
         <View>
           <Text>ProfileScreen</Text>
           <Text>ProfileScreen</Text>
@@ -31,10 +35,15 @@ const ProfileScreen = () => {
           <Text>ProfileScreen</Text>
           <Text>ProfileScreen</Text>
         </View>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          onPress={() => {
+            handleLogout();
+          }}
+          style={styles.button}
+        >
           <Text style={styles.buttonText}>Logout</Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -63,6 +72,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     backgroundColor: Colors.bg,
     padding: 15,
+    position: "relative",
   },
   container: {
     // justifyContent: "center",
