@@ -1,18 +1,42 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Text, Pressable } from "react-native";
+import { View, StyleSheet, Text, Pressable } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 import InputField from "@/components/ui/InputField";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "@/components/ui/Header";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { setSelectedChat } from "@/redux/chatReducer/chatReducer";
+import { env } from "@/constants/environment";
+import axiosInstance from "@/constants/axiosInstance";
 
 const JoinCommunityScreen = () => {
-  const [communityHash, setCommunityHash] = useState("");
+  const { chats } = useSelector((state: RootState) => state.chat);
+  const dispatch = useDispatch();
+
+  const joinCommunity = () => {
+    axiosInstance
+      .post("/community/join-default-community", { defaultCommunityId: env.defaultCommunityId })
+      .then((res) => {
+        dispatch(setSelectedChat(res.data.chat));
+        router.push(`/message/message`);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const handleJoinCommunity = () => {
-    // Implement join community logic here
-    console.log("Joining community with hash:", communityHash);
+    const chat = chats.find((chat) => chat._id === env.defaultCommunityId);
+
+    if (chat?._id) {
+      dispatch(setSelectedChat(chat));
+      router.push(`/message/message`);
+    } else {
+      joinCommunity();
+    }
   };
 
   return (
@@ -21,7 +45,12 @@ const JoinCommunityScreen = () => {
 
       <StatusBar style="auto" />
       <View style={styles.content}>
-        <Pressable style={styles.joinChatButtonContainer} onPress={() => {}}>
+        <Pressable
+          style={styles.joinChatButtonContainer}
+          onPress={() => {
+            handleJoinCommunity();
+          }}
+        >
           <Ionicons name="chatbubble-ellipses" size={60} color={Colors.white} />
           <Text style={styles.joinChatButtonText}>Join ASMS</Text>
           <Text style={styles.joinChatButtonText}>Community</Text>
