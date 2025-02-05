@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Pressable } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { setDisplayName, setPin } from "@/redux/userReducer/userReducer";
 import { RootState } from "@/redux/store";
@@ -51,6 +51,9 @@ const LoginScreen = () => {
   if (displayName) {
     return (
       <LinearGradient colors={[Colors.bg, "transparent"]} style={styles.container}>
+        <Pressable style={styles.backButton}>
+          <Feather onPress={() => dispatch(setDisplayName(""))} name="arrow-left" size={24} color={Colors.white} />
+        </Pressable>
         <TextInput
           style={styles.input}
           maxLength={4}
@@ -103,6 +106,15 @@ const LoginScreen = () => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
+  backButton: {
+    position: "absolute",
+    top: 40,
+    left: 20,
+    borderColor: Colors.white,
+    borderWidth: 1,
+    borderRadius: 50,
+    padding: 5,
+  },
   infoContainer: {
     alignItems: "center",
     justifyContent: "space-between",

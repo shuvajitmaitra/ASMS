@@ -14,20 +14,26 @@ import axiosInstance from "@/constants/axiosInstance";
 
 const JoinCommunityScreen = () => {
   const { chats } = useSelector((state: RootState) => state.chat);
+  const { hash } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
 
   const joinCommunity = () => {
+    if (!hash) return;
+    console.log("hash", JSON.stringify(hash, null, 2));
+
     axiosInstance
-      .post("/community/join-default-community", { defaultCommunityId: env.defaultCommunityId })
+      .put("/chat/join-default-community", { userId: hash })
       .then((res) => {
-        dispatch(setSelectedChat(res.data.chat));
-        router.push(`/message/message`);
+        if (res.status === 404) {
+          alert("Default community not found!");
+        }
+        console.log("Response:", res.data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error("Join error:", error.response?.data || error.message);
+        alert(error.response?.data?.message || "Failed to join community");
       });
   };
-
   const handleJoinCommunity = () => {
     const chat = chats.find((chat) => chat._id === env.defaultCommunityId);
 
