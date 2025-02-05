@@ -48,6 +48,22 @@ export default function AppLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="chat/joincommunity"
+        options={{
+          animation: "slide_from_bottom",
+          headerShown: false,
+          presentation: "modal",
+          title: "tessss",
+        }}
+      />
+      {/* <Stack.Screen
+        name="screens/joincommunity"
+        options={{
+          // headerShown: false,
+          animation: "fade",
+        }}
+      /> */}
     </Stack>
   );
 }

@@ -27,7 +27,7 @@ const CreateChatScreen = () => {
 
         <ChatButton title="Create private group" onPress={() => setCreatePrivateChatVisible(true)} />
 
-        <ChatButton title="Join community" onPress={() => setCreatePrivateChatVisible(true)} icon="users" />
+        <ChatButton title="Join community" onPress={() => router.push("/chat/joincommunity")} icon="users" />
 
         <ChatButton title="Invite your friend" onPress={handleInviteFriend} icon="share" />
 
