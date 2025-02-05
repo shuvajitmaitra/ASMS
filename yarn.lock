@@ -6133,6 +6133,11 @@ react-native-screens@~4.4.0:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
+react-native-skeleton-loaders@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-skeleton-loaders/-/react-native-skeleton-loaders-1.5.0.tgz#9e70c17992b6c67709038dcfa04cabcfd24c4e02"
+  integrity sha512-PgYNZaxgwPYFzUgXxn/X13dolzVOOGnL9UJ7z3K3tV3oEvZPJOn+ftPCyxJIygMOTRitoFV4NtWzqzFtjLNfEw==
+
 react-native-toast-message@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/react-native-toast-message/-/react-native-toast-message-2.2.1.tgz#f395321e9bc818ce63274c38a3d294ed997a4a27"

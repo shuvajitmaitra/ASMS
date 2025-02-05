@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput, SafeAreaView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { FlashList } from "@shopify/flash-list";
 import { router } from "expo-router";
@@ -93,7 +93,7 @@ const ChatScreen: React.FC = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Header with Search */}
       <StatusBar />
       <View style={styles.header}>
@@ -122,7 +122,7 @@ const ChatScreen: React.FC = () => {
       <TouchableOpacity style={styles.addButton} onPress={() => router.push("/(app)/chat/createchat")}>
         <MaterialIcons name="add" size={28} color="#fff" />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 

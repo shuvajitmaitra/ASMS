@@ -9,11 +9,12 @@ import { Feather } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { handleCopyText } from "@/utils/commonFunction";
+import Loading from "@/components/ui/Loading";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [pin, setPinInput] = useState("");
-
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const { displayName, hash } = useSelector((state: RootState) => state.user);
 
@@ -24,7 +25,7 @@ const LoginScreen = () => {
       return;
     }
     dispatch(setPin(pin));
-    await handleRegister({ displayName, pin });
+    await handleRegister({ displayName, pin, setIsLoading });
   };
 
   // If hash is present, navigate to app screen
@@ -47,6 +48,14 @@ const LoginScreen = () => {
     );
   }
 
+  // if (true) {
+  //   return (
+  //     <SkeletonGroup numberOfItems={4} direction="row" stagger={{ delay: 30 }}>
+  //       <Skeleton w={20} h={20} bR={50} />
+  //     </SkeletonGroup>
+  //   );
+  // }
+
   // If username (displayName) exists, show PIN input
   if (displayName) {
     return (
@@ -68,7 +77,7 @@ const LoginScreen = () => {
           disabled={pin.length !== 4}
           onPress={handlePinSubmit}
         >
-          <Text style={styles.signInButtonText}>Next</Text>
+          {isLoading ? <Loading /> : <Text style={styles.signInButtonText}>Next</Text>}
         </TouchableOpacity>
       </LinearGradient>
     );
@@ -83,7 +92,7 @@ const LoginScreen = () => {
 
       <Text style={styles.welcomeText}>Welcome Back</Text>
       <Text style={styles.signInText}>Sign in to continue</Text>
-
+      <Loading />
       <TextInput
         style={styles.input}
         placeholder="Enter display name"
