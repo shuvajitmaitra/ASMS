@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setDisplayName, setPin } from "@/redux/userReducer/userReducer";
 import { RootState } from "@/redux/store";
 import { handleRegister } from "@/constants/ApiCall";
-import { router } from "expo-router";
+import { router, Stack } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
@@ -56,6 +56,7 @@ const LoginScreen = () => {
           maxLength={4}
           placeholder="Enter PIN"
           keyboardType="number-pad"
+          placeholderTextColor={Colors.body}
           value={pin}
           onChangeText={setPinInput}
         />
@@ -73,6 +74,7 @@ const LoginScreen = () => {
   // Default Login Screen
   return (
     <LinearGradient colors={[Colors.bg, "transparent"]} style={styles.container}>
+      <Stack.Screen options={{ headerShown: false, statusBarTranslucent: true }} />
       <Text style={styles.logo}>UI</Text>
       <Text style={styles.subtitle}>vector interface</Text>
 
@@ -145,7 +147,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#2D2D2D",
     borderRadius: 10,
     paddingHorizontal: 15,
-    color: "#FFFFFF",
+    color: Colors.body,
     fontSize: 16,
     marginBottom: 15,
   },
