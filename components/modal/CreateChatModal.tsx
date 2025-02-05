@@ -1,13 +1,13 @@
-import { Button, Modal, StyleSheet, Text, View } from "react-native";
+import { Button, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import ReactNativeModal from "react-native-modal";
-import { Feather } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import InputField from "../ui/InputField";
 import axiosInstance from "@/constants/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
-import { setChats } from "@/redux/chatReducer/chatReducer";
 import { RootState } from "@/redux/store";
+import Grabber from "../ui/Grabber";
+import { handleShare } from "@/utils/commonFunction";
 
 const CreateChatModal = ({ visible, onClose }: { visible: boolean; onClose: () => void }) => {
   const [hashId, setHashId] = useState<string>("");
@@ -37,7 +37,7 @@ const CreateChatModal = ({ visible, onClose }: { visible: boolean; onClose: () =
       onBackdropPress={onClose}
     >
       <View style={styles.container}>
-        <Feather style={styles.closeButton} onPress={onClose} name="x-circle" size={30} color={Colors.white} />
+        <Grabber />
         <InputField
           label="Paste your friends Hash ID"
           value={hashId}
@@ -45,6 +45,13 @@ const CreateChatModal = ({ visible, onClose }: { visible: boolean; onClose: () =
             setHashId(text);
           }}
         />
+        <TouchableOpacity
+          onPress={() => {
+            handleShare(hash);
+          }}
+        >
+          <Text>Invite to your friends</Text>
+        </TouchableOpacity>
         <Button title="Create Chat" onPress={handleCreateChat} />
       </View>
     </ReactNativeModal>
@@ -59,6 +66,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    position: "relative",
   },
   closeButton: {
     alignSelf: "flex-end",

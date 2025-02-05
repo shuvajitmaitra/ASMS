@@ -45,8 +45,6 @@ export default function AppLayout() {
       <Stack.Screen
         name="chat/createchat"
         options={{
-          presentation: "formSheet",
-          contentStyle: { backgroundColor: "transparent" },
           headerShown: false,
         }}
       />

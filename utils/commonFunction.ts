@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import Toast from "react-native-toast-message";
 import * as Clipboard from "expo-clipboard";
+import { Share } from "react-native";
 
 export const handleLogout = () => {
   resetStore(); // Directly call the resetStore function
@@ -28,4 +29,10 @@ export const showToast = ({ message, color, background }: ToastOptions): void =>
 export const handleCopyText = async (text: string) => {
   if (!text) return;
   await Clipboard.setStringAsync(text);
+};
+
+export const handleShare = async (text: string) => {
+  await Share.share({
+    message: text,
+  });
 };
