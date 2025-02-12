@@ -1,79 +1,58 @@
-import { Dimensions, Platform, ScaledSize } from "react-native";
+import { Dimensions } from "react-native";
 
-// Get initial dimensions
 const { width, height } = Dimensions.get("window");
-let [shortDimension, longDimension] = width < height ? [width, height] : [height, width];
-
-// Device type detection
-const isSmallDevice = shortDimension < 375; // iPhone 5/SE
-const isMediumDevice = shortDimension >= 375 && shortDimension < 414; // iPhone 6-8
-const isLargeDevice = shortDimension >= 414; // iPhone X/Plus/Modern Android
-
-// Guideline sizes (based on iPhone 11 Pro Max screen size)
-const GUIDELINE_BASE_WIDTH = 414;
-const GUIDELINE_BASE_HEIGHT = 896;
-
-// Scaling factors
-const scale = (size: number) => (shortDimension / GUIDELINE_BASE_WIDTH) * size;
-const verticalScale = (size: number) => (longDimension / GUIDELINE_BASE_HEIGHT) * size;
-const moderateScale = (size: number, factor = 0.5) => size + (scale(size) - size) * factor;
-const moderateVerticalScale = (size: number, factor = 0.5) => size + (verticalScale(size) - size) * factor;
-
-// Responsive font sizing with device breakpoints
-export const fs = {
-  small: moderateScale(isSmallDevice ? 12 : 14),
-  body: moderateScale(isSmallDevice ? 14 : 16),
-  subHeading: moderateScale(isSmallDevice ? 16 : 20),
-  heading: moderateScale(isSmallDevice ? 20 : 24),
-  largeTitle: moderateScale(isSmallDevice ? 24 : 32),
+const BASE_WIDTH = 375;
+const BASE_HEIGHT = 812;
+const scaleSize = (size: number) => (width / BASE_WIDTH) * size;
+const verticalScaleSize = (size: number) => (height / BASE_HEIGHT) * size;
+const responsiveFontSize = (size: number) => {
+  const scaleFactor = Math.min(width / BASE_WIDTH, height / BASE_HEIGHT);
+  return Math.round(size * scaleFactor);
 };
 
-// Adaptive spacing system
-export const s = {
-  xxs: moderateScale(4),
-  xs: moderateScale(8),
-  s: moderateScale(12),
-  m: moderateScale(16),
-  l: moderateScale(24),
-  xl: moderateScale(32),
-  xxl: moderateScale(48),
+export const gWidth = (size: number) => scaleSize(size);
+export const gHeight = (size: number) => verticalScaleSize(size);
+export const gFontSize = (size: number) => responsiveFontSize(size);
+export const gMargin = (size: number) => scaleSize(size);
+export const gPadding = (size: number) => scaleSize(size);
+export const gBorderRadius = (size: number) => scaleSize(size);
+
+// ─── EXPORTED STYLE TOKENS ──────────────────────────────────────────
+
+// Font sizes
+export const fontSizes = {
+  small: gFontSize(12),
+  body: gFontSize(14),
+  subHeading: gFontSize(16),
+  heading: gFontSize(18),
+  largeTitle: gFontSize(20),
 };
 
-// Responsive button sizes
-export const bs = {
-  small: moderateVerticalScale(40),
-  default: moderateVerticalScale(48),
-  large: moderateVerticalScale(56),
+// Spacing (for margins, paddings, etc.)
+export const margin = {
+  small: gMargin(8),
+  default: gMargin(16),
+  large: gMargin(24),
 };
 
-// Adaptive border radii
-export const br = {
-  small: moderateScale(4),
-  medium: moderateScale(8),
-  large: moderateScale(16),
-  xLarge: moderateScale(24),
-  circle: moderateScale(50),
+export const padding = {
+  small: gPadding(8),
+  default: gPadding(16),
+  large: gPadding(24),
 };
 
-// Listen for orientation changes
-Dimensions.addEventListener("change", ({ window }) => {
-  [shortDimension, longDimension] = window.width < window.height ? [window.width, window.height] : [window.height, window.width];
-});
-
-// Additional responsive helpers
-export const responsive = {
-  // Percentage-based sizing
-  widthPercentage: (percentage: number) => (shortDimension * percentage) / 100,
-  heightPercentage: (percentage: number) => (longDimension * percentage) / 100,
-
-  // Aspect ratio scaling
-  aspectRatioScale: (size: number, ratio = 16 / 9) => Math.sqrt((size * shortDimension * (size * longDimension)) / ratio),
-
-  // Platform-specific scaling
-  platformScale: (iosSize: number, androidSize: number) =>
-    Platform.select({ ios: moderateScale(iosSize), android: moderateScale(androidSize) }),
+// Button heights – using the same tokens so that a “small” button, for example,
+// has the same size as a “small” font and spacing.
+export const buttonHeights = {
+  small: gHeight(32),
+  default: gHeight(48),
+  large: gHeight(64),
 };
 
-// Usage examples:
-// - responsive.widthPercentage(50) // 50% of screen width
-// - responsive.aspectRatioScale(100) // Scale based on aspect ratio
+// Border radius can also be scaled similarly (here we adjust the numbers as needed)
+export const borderRadius = {
+  small: gBorderRadius(8),
+  default: gBorderRadius(16),
+  large: gBorderRadius(24),
+  circle: gBorderRadius(50),
+};

@@ -10,25 +10,95 @@ import { Colors } from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { handleCopyText } from "@/utils/commonFunction";
 import Loading from "@/components/ui/Loading";
+import { borderRadius, buttonHeights, fontSizes, gWidth, margin, padding } from "@/constants/sizes";
+type logInfoType = {
+  userName: string;
+  password: string;
+  pin: string;
+  setIsLoading: (isLoading: boolean) => void;
+};
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState("");
-  const [pin, setPinInput] = useState("");
+  const [logInfo, setLogInfo] = useState<logInfoType | null>(null);
+
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const { displayName, hash } = useSelector((state: RootState) => state.user);
 
   // Handle PIN Submission
   const handlePinSubmit = async () => {
-    if (pin.length !== 4) {
+    if (logInfo?.pin.length !== 4) {
       Alert.alert("Invalid PIN", "PIN must be exactly 4 digits");
       return;
     }
-    dispatch(setPin(pin));
-    await handleRegister({ displayName, pin, setIsLoading });
+    dispatch(setPin(logInfo?.pin));
+    await handleRegister({ displayName, pin: logInfo?.pin, setIsLoading });
   };
 
   // If hash is present, navigate to app screen
+  if (false) {
+    return (
+      <View style={{ flex: 1, backgroundColor: Colors.bg, alignItems: "center", justifyContent: "center" }}>
+        <View style={{ flexDirection: "row", gap: gWidth(10), marginBottom: margin.default, alignItems: "center" }}>
+          <View style={{ height: buttonHeights.small, width: 100, backgroundColor: Colors.primary }}></View>
+          <View style={{ height: buttonHeights.default, width: 100, backgroundColor: Colors.primary }}></View>
+          <View style={{ height: buttonHeights.large, width: 100, backgroundColor: Colors.primary }}></View>
+        </View>
+        <View style={{ flexDirection: "row", gap: gWidth(10), marginBottom: margin.default }}>
+          <View style={{ height: 80, width: 80, backgroundColor: Colors.primary, borderRadius: borderRadius.small }}></View>
+          <View style={{ height: 80, width: 80, backgroundColor: Colors.primary, borderRadius: borderRadius.default }}></View>
+          <View style={{ height: 80, width: 80, backgroundColor: Colors.primary, borderRadius: borderRadius.large }}></View>
+          <View style={{ height: 80, width: 80, backgroundColor: Colors.primary, borderRadius: borderRadius.circle }}></View>
+        </View>
+        <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: Colors.border, marginBottom: margin.default }}>
+          <Text
+            style={{
+              color: Colors.white,
+              borderColor: Colors.white,
+              fontSize: fontSizes.body,
+              margin: margin.small,
+              padding: padding.small,
+              backgroundColor: Colors.body,
+            }}
+          >
+            sample "small" margin padding
+          </Text>
+        </View>
+        <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: Colors.border, marginBottom: margin.default }}>
+          <Text
+            style={{
+              backgroundColor: Colors.body,
+              color: Colors.white,
+              fontSize: fontSizes.body,
+              margin: margin.default,
+              padding: padding.default,
+            }}
+          >
+            sample "default" margin padding
+          </Text>
+        </View>
+        <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: Colors.border, marginBottom: margin.default }}>
+          <Text
+            style={{
+              color: Colors.white,
+              fontSize: fontSizes.body,
+              margin: margin.large,
+              padding: padding.large,
+              backgroundColor: Colors.body,
+            }}
+          >
+            sample "large" margin padding
+          </Text>
+        </View>
+        <Text style={{ color: Colors.white, fontSize: fontSizes.small }}>Font size small {fontSizes.small}</Text>
+        <Text style={{ color: Colors.white, fontSize: fontSizes.body }}>Font size body {fontSizes.body}</Text>
+        <Text style={{ color: Colors.white, fontSize: fontSizes.subHeading }}>Font size subHeading {fontSizes.subHeading}</Text>
+        <Text style={{ color: Colors.white, fontSize: fontSizes.heading }}>Font size heading {fontSizes.heading}</Text>
+        <Text style={{ color: Colors.white, fontSize: fontSizes.largeTitle }}>Font size largeTitle {fontSizes.largeTitle}</Text>
+      </View>
+    );
+  }
+
   if (hash) {
     return (
       <LinearGradient colors={[Colors.bg, "transparent"]} style={styles.container}>
@@ -57,7 +127,7 @@ const LoginScreen = () => {
   // }
 
   // If username (displayName) exists, show PIN input
-  if (displayName) {
+  if (false) {
     return (
       <LinearGradient colors={[Colors.bg, "transparent"]} style={styles.container}>
         <Pressable style={styles.backButton}>
@@ -69,13 +139,13 @@ const LoginScreen = () => {
           placeholder="Enter PIN"
           keyboardType="number-pad"
           placeholderTextColor={Colors.body}
-          value={pin}
-          onChangeText={setPinInput}
+          value={logInfo?.pin || ""}
+          onChangeText={(text) => setLogInfo({ ...logInfo!, pin: text })}
         />
         <TouchableOpacity
-          style={[styles.signInButton, pin.length !== 4 && styles.disabledButton]}
-          disabled={pin.length !== 4}
-          onPress={handlePinSubmit}
+          style={[styles.signInButton, logInfo?.pin?.length !== 4 && styles.disabledButton]}
+          disabled={logInfo?.pin?.length !== 4}
+          onPress={() => {}}
         >
           {isLoading ? <Loading /> : <Text style={styles.signInButtonText}>Next</Text>}
         </TouchableOpacity>
@@ -92,21 +162,39 @@ const LoginScreen = () => {
 
       <Text style={styles.welcomeText}>Welcome Back</Text>
       <Text style={styles.signInText}>Sign in to continue</Text>
-      <Loading />
       <TextInput
         style={styles.input}
-        placeholder="Enter display name"
+        placeholder="Enter unique username"
         placeholderTextColor="#A0A0A0"
-        value={email}
-        onChangeText={setEmail}
+        value={logInfo?.userName || ""}
+        onChangeText={(text) => setLogInfo({ ...logInfo!, userName: text })}
       />
-
-      <TouchableOpacity style={styles.signInButton} onPress={() => dispatch(setDisplayName(email))}>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter password"
+        placeholderTextColor="#A0A0A0"
+        value={logInfo?.password || ""}
+        onChangeText={(text) => setLogInfo({ ...logInfo!, password: text })}
+      />
+      <TextInput
+        style={styles.input}
+        maxLength={4}
+        placeholder="Enter PIN"
+        keyboardType="number-pad"
+        placeholderTextColor={Colors.body}
+        value={logInfo?.pin || ""}
+        onChangeText={(text) => setLogInfo({ ...logInfo!, pin: text })}
+      />
+      <TouchableOpacity style={styles.signInButton} onPress={() => {}}>
         <Text style={styles.signInButtonText}>Next</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push("/screens/recover/recover")}>
         <Text style={styles.recoverText}>Recover your account</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => router.push("/screens/signup")}>
+        <Text style={styles.recoverText}>Create your account</Text>
       </TouchableOpacity>
     </LinearGradient>
   );
@@ -174,7 +262,7 @@ const styles = StyleSheet.create({
   },
   signInButton: {
     width: "100%",
-    height: 50,
+    height: buttonHeights.default,
     backgroundColor: Colors.primary,
     borderRadius: 10,
     alignItems: "center",
@@ -183,7 +271,7 @@ const styles = StyleSheet.create({
   },
   signInButtonText: {
     color: "#FFFFFF",
-    fontSize: 18,
+    fontSize: fontSizes.subHeading,
     fontWeight: "bold",
   },
   disabledButton: {
@@ -191,7 +279,7 @@ const styles = StyleSheet.create({
   },
   recoverText: {
     color: "#FFFFFF",
-    fontSize: 14,
+    fontSize: fontSizes.body,
     textDecorationLine: "underline",
     marginBottom: 10,
   },
