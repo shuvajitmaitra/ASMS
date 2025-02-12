@@ -11,6 +11,7 @@ import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "@/utils/toastConfig";
+import { GlobalProvider } from "@/hooks/useGlobalContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,12 +32,14 @@ export default function RootLayout() {
   }
 
   return (
-    <Provider store={store}>
-      <ThemeProvider value={colorScheme === "light" ? DarkTheme : DefaultTheme}>
-        <Slot />
-        <StatusBar style="auto" />
-        <Toast config={toastConfig} />
-      </ThemeProvider>
-    </Provider>
+    <GlobalProvider>
+      <Provider store={store}>
+        <ThemeProvider value={colorScheme === "light" ? DarkTheme : DefaultTheme}>
+          <Slot />
+          <StatusBar style="auto" />
+          <Toast config={toastConfig} />
+        </ThemeProvider>
+      </Provider>
+    </GlobalProvider>
   );
 }

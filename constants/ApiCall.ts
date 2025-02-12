@@ -6,15 +6,19 @@ import { setChats } from "@/redux/chatReducer/chatReducer";
 export const handleRegister = async ({
   displayName,
   pin,
+  password,
+  username,
   setIsLoading,
 }: {
   displayName: string;
   pin: string;
   setIsLoading: (loading: boolean) => void;
+  password: string;
+  username: string;
 }) => {
   try {
     setIsLoading(true);
-    const response = await axiosInstance.post("/user/register", { displayName, pin });
+    const response = await axiosInstance.post("/user/register", { displayName, pin, password, username });
     console.log("response.data", JSON.stringify(response.data, null, 2));
     store.dispatch(setHash(response.data.hash));
   } catch (error: any) {

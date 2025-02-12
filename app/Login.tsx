@@ -32,7 +32,7 @@ const LoginScreen = () => {
       return;
     }
     dispatch(setPin(logInfo?.pin));
-    await handleRegister({ displayName, pin: logInfo?.pin, setIsLoading });
+    // await handleRegister({ displayName, pin: logInfo?.pin, setIsLoading });
   };
 
   // If hash is present, navigate to app screen

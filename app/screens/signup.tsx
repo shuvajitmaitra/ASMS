@@ -10,7 +10,8 @@ import { Colors } from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { handleCopyText } from "@/utils/commonFunction";
 import Loading from "@/components/ui/Loading";
-import { borderRadius, buttonHeights, fontSizes, gWidth, margin, padding } from "@/constants/sizes";
+import { borderRadius, buttonHeights, fontSizes } from "@/constants/sizes";
+import { useGlobalContext } from "@/hooks/useGlobalContext";
 type logInfoType = {
   displayName: string;
   userName: string;
@@ -20,24 +21,19 @@ type logInfoType = {
 };
 
 const SignupScreen = () => {
-  const [logInfo, setLogInfo] = useState<logInfoType | null>(null);
+  const { globalData, setGlobalData } = useGlobalContext();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const dispatch = useDispatch();
-  const { displayName } = useSelector((state: RootState) => state.user);
 
   // Handle PIN Submission
-  const handlePinSubmit = async () => {
-    if (logInfo?.pin.length !== 4) {
-      Alert.alert("Invalid PIN", "PIN must be exactly 4 digits");
-      return;
-    }
-    dispatch(setPin(logInfo?.pin));
+  const handleSignup = async () => {
     await handleRegister({
-      displayName,
-      pin: logInfo?.pin,
-      setIsLoading: (isLoading: boolean) => {
-        setLogInfo({ ...logInfo!, isLoading: isLoading });
-      },
+      displayName: globalData.displayName || "",
+      pin: globalData.pin || "",
+      password: globalData.password || "",
+      username: globalData.userName || "",
+      setIsLoading,
     });
   };
 
@@ -54,22 +50,22 @@ const SignupScreen = () => {
         style={styles.input}
         placeholder="Enter display name"
         placeholderTextColor="#A0A0A0"
-        value={logInfo?.displayName || ""}
-        onChangeText={(text) => setLogInfo({ ...logInfo!, displayName: text })}
+        value={globalData?.displayName || ""}
+        onChangeText={(text) => setGlobalData({ ...globalData!, displayName: text })}
       />
       <TextInput
         style={styles.input}
         placeholder="Enter unique username"
         placeholderTextColor="#A0A0A0"
-        value={logInfo?.userName || ""}
-        onChangeText={(text) => setLogInfo({ ...logInfo!, userName: text })}
+        value={globalData?.userName || ""}
+        onChangeText={(text) => setGlobalData({ ...globalData!, userName: text })}
       />
       <TextInput
         style={styles.input}
         placeholder="Enter password"
         placeholderTextColor="#A0A0A0"
-        value={logInfo?.password || ""}
-        onChangeText={(text) => setLogInfo({ ...logInfo!, password: text })}
+        value={globalData?.password || ""}
+        onChangeText={(text) => setGlobalData({ ...globalData!, password: text })}
       />
       <TextInput
         style={styles.input}
@@ -77,11 +73,16 @@ const SignupScreen = () => {
         placeholder="Enter PIN"
         keyboardType="number-pad"
         placeholderTextColor={Colors.body}
-        value={logInfo?.pin || ""}
-        onChangeText={(text) => setLogInfo({ ...logInfo!, pin: text })}
+        value={globalData?.pin || ""}
+        onChangeText={(text) => setGlobalData({ ...globalData!, pin: text })}
       />
-      <TouchableOpacity style={styles.signInButton} onPress={() => {}}>
-        <Text style={styles.signInButtonText}>Next</Text>
+      <TouchableOpacity
+        style={styles.signInButton}
+        onPress={() => {
+          handleSignup();
+        }}
+      >
+        <Text style={styles.signInButtonText}>Sign up</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push("/login")}>
