@@ -78,7 +78,6 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 7,
-    backgroundColor: Colors.primary,
   },
   container: {
     backgroundColor: Colors.bg,

@@ -1,16 +1,6 @@
-import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  TextInput,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
-  ActivityIndicator,
-} from "react-native";
-import { Feather } from "@expo/vector-icons";
+import React, { useState, useRef, useLayoutEffect } from "react";
+import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,13 +10,13 @@ import axiosInstance from "@/constants/axiosInstance";
 import { TMessage } from "@/types/message/message.type";
 import { TError } from "@/types/error/error.type";
 import { addNewMessage, setMessages } from "@/redux/messageReducer/messageReducer";
+import { padding } from "@/constants/sizes";
 
 const MessageScreen = () => {
   const { selectedChat } = useSelector((state: RootState) => state.chat);
   const { messages } = useSelector((state: RootState) => state.message);
   const { hash } = useSelector((state: RootState) => state.user);
   const { top, bottom } = useSafeAreaInsets();
-  // const [messages, setMessages] = useState<TMessage[]>([]);
   const [messageText, setMessageText] = useState<string>("");
   const flatListRef = useRef<FlatList>(null);
   const [page, setPage] = useState(1);
@@ -52,7 +42,6 @@ const MessageScreen = () => {
     fetchMessages();
   }, [page, selectedChat?._id]);
 
-  // Function to send a new message
   const handleSend = async () => {
     if (!messageText.trim() || !selectedChat?._id) return;
 
@@ -66,9 +55,6 @@ const MessageScreen = () => {
 
       dispatch(addNewMessage({ chatId: selectedChat._id, message: newMessage }));
       setMessageText("");
-
-      // Scroll to bottom after sending a message
-      // flatListRef.current?.scrollToIndex({ animated: true, index: 0 });
     } catch (error: any) {
       console.log("error", JSON.stringify(error.response.data, null, 2));
     }
@@ -94,7 +80,7 @@ const MessageScreen = () => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       style={styles.keyboardAvoidingView}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+      keyboardVerticalOffset={0}
     >
       <View style={[styles.container, { paddingTop: top }]}>
         <View style={styles.header}>
@@ -116,8 +102,7 @@ const MessageScreen = () => {
           />
         </View>
 
-        {/* Message Input */}
-        <View style={[styles.inputContainer, { paddingBottom: bottom }]}>
+        <View style={[styles.inputContainer, Platform.OS === "ios" && { marginBottom: 10 }]}>
           <TextInput
             style={styles.textInput}
             placeholder="Type a message"
@@ -127,7 +112,7 @@ const MessageScreen = () => {
             multiline
           />
           <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
-            <Feather name="send" size={20} color={Colors.white} />
+            <Ionicons name="send" size={30} color={Colors.primary} />
           </TouchableOpacity>
         </View>
       </View>
@@ -140,19 +125,16 @@ export default MessageScreen;
 const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,
-    backgroundColor: Colors.primary,
   },
   container: {
     flex: 1,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.bg,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 10,
     paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#333",
   },
   headerTitle: {
     marginLeft: 10,
@@ -162,15 +144,15 @@ const styles = StyleSheet.create({
   },
   messagesContainer: {
     flex: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingHorizontal: padding.default,
+    backgroundColor: Colors.bg,
   },
   flatListContent: {
+    gap: 10,
     paddingVertical: 10,
   },
   messageBubble: {
     maxWidth: "80%",
-    marginVertical: 5,
     padding: 10,
     borderRadius: 10,
   },
@@ -195,10 +177,9 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "flex-end",
-    paddingHorizontal: 10,
+    paddingLeft: padding.default,
+    paddingRight: padding.small,
     paddingVertical: 8,
-    borderTopWidth: 1,
-    borderTopColor: "#333",
     backgroundColor: Colors.bg,
   },
   textInput: {
@@ -213,7 +194,7 @@ const styles = StyleSheet.create({
   sendButton: {
     marginLeft: 8,
     backgroundColor: Colors.bg,
-    padding: 10,
+    padding: 5,
     borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",

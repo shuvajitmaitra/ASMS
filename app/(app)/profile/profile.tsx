@@ -1,16 +1,13 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Colors } from "@/constants/Colors";
-import { StatusBar } from "expo-status-bar";
-import Grabber from "@/components/ui/Grabber";
 import { handleLogout } from "@/utils/commonFunction";
+import { margin, padding } from "@/constants/sizes";
 
 const ProfileScreen = () => {
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <StatusBar />
-        <Grabber />
+      <View style={styles.subContainer}>
         <TouchableOpacity
           onPress={() => {
             handleLogout();
@@ -19,7 +16,7 @@ const ProfileScreen = () => {
         >
           <Text style={styles.buttonText}>Logout</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     </View>
   );
 };
@@ -33,19 +30,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   button: {
-    width: "80%",
+    width: "100%",
     borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-    backgroundColor: Colors.primary,
     height: 40,
   },
-  subContainer: {},
+  subContainer: {
+    padding: padding.default,
+  },
   container: {
-    backgroundColor: Colors.body,
-    flex: 1,
-    paddingTop: 20,
+    backgroundColor: "#555",
     position: "relative",
   },
 });

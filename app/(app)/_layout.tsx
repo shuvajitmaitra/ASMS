@@ -1,6 +1,12 @@
 import { Colors } from "@/constants/Colors";
-import { Stack } from "expo-router";
+import { RootState } from "@/redux/store";
+import { router, Stack } from "expo-router";
+import { useSelector } from "react-redux";
 export default function AppLayout() {
+  const { user } = useSelector((state: RootState) => state.user);
+  if (!user?.accessToken) {
+    router.replace("/(auth)");
+  }
   return (
     <Stack>
       <Stack.Screen
@@ -13,7 +19,8 @@ export default function AppLayout() {
         name="message/message"
         options={{
           headerShown: false,
-          animation: "fade",
+          animation: "slide_from_bottom",
+          contentStyle: { backgroundColor: Colors.bg },
         }}
       />
       <Stack.Screen

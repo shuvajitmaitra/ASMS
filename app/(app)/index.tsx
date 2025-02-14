@@ -98,7 +98,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.bg,
   },
   header: {
-    backgroundColor: Colors.primary, // Assuming you have a primary color defined
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
