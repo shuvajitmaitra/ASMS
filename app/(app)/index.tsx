@@ -9,56 +9,19 @@ import { setChats, setSelectedChat } from "@/redux/chatReducer/chatReducer";
 import { RootState } from "@/redux/store";
 import { Colors } from "@/constants/Colors";
 import { StatusBar } from "expo-status-bar";
+import { TChat } from "@/types/chat/chat.types";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { borderRadius, margin, padding } from "@/constants/sizes";
 
 // Define the type for each chat item
-type UserData = {
-  _id: string;
-  displayName: string;
-  profilePicture: string;
-  role?: "admin" | "member";
-  isIamBlocked?: boolean;
-  amIBlocked?: boolean;
-  isActive?: boolean;
-};
-
-type GroupChatData = {
-  _id: string;
-  chatName: string;
-  isGroupChat: true;
-  membersCount: number;
-  unreadCount: number;
-  myData: UserData;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-};
-
-type DirectChatData = {
-  _id: string;
-  isGroupChat: false;
-  myData: UserData;
-  otherUser: {
-    _id: string;
-    displayName: string;
-    profilePicture: string;
-    isActive: boolean;
-  };
-  unreadCount: number;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-};
-
-// Union type for chats
-type ChatData = GroupChatData | DirectChatData;
 
 const ChatScreen: React.FC = () => {
   const dispatch = useDispatch();
+  const { top } = useSafeAreaInsets();
 
-  const { chats }: { chats: ChatData[] } = useSelector((state: RootState) => state.chat);
+  const { chats }: { chats: TChat[] } = useSelector((state: RootState) => state.chat);
 
   useLayoutEffect(() => {
-    console.log("chats", JSON.stringify(chats, null, 2));
     getChats();
     return () => {
       // Clean up if necessary
@@ -66,12 +29,12 @@ const ChatScreen: React.FC = () => {
     };
   }, []);
 
-  const handleChatPress = (chat: ChatData) => {
+  const handleChatPress = (chat: TChat) => {
     dispatch(setSelectedChat(chat));
     router.push(`/message/message`);
   };
 
-  const renderItem = ({ item }: { item: ChatData }) => (
+  const renderItem = ({ item }: { item: TChat }) => (
     <TouchableOpacity onPress={() => handleChatPress(item)} style={styles.chatContainer}>
       {/* <Image
         source={{ uri: item.isGroupChat ? "https://via.placeholder.com/50" : item.otherUser.profilePicture }}
@@ -94,10 +57,10 @@ const ChatScreen: React.FC = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header with Search */}
       <StatusBar />
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: top }]}>
         <Text style={styles.headerTitle}>Chats</Text>
         <TouchableOpacity onPress={() => router.push("/(app)/profile/profile")}>
           <Ionicons name="person-circle-outline" size={28} color="#fff" />
@@ -123,7 +86,7 @@ const ChatScreen: React.FC = () => {
       <TouchableOpacity style={styles.addButton} onPress={() => router.push("/(app)/chat/createchat")}>
         <MaterialIcons name="add" size={28} color="#fff" />
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -135,13 +98,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.bg,
   },
   header: {
-    height: 60,
     backgroundColor: Colors.primary, // Assuming you have a primary color defined
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 15,
-    paddingTop: 10,
+    paddingHorizontal: padding.default,
+    paddingBottom: padding.small,
+    borderBottomRightRadius: borderRadius.large,
+    borderBottomLeftRadius: borderRadius.large,
   },
   headerTitle: {
     fontSize: 24,

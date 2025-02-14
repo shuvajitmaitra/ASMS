@@ -17,23 +17,13 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { router } from "expo-router";
 import axiosInstance from "@/constants/axiosInstance";
-
-interface Message {
-  _id: string;
-  text: string;
-  createdAt: string;
-  sender: {
-    _id: string;
-    displayName: string;
-    profilePicture?: string;
-  };
-}
+import { TMessage } from "@/types/message/message.type";
 
 const MessageScreen = () => {
   const { selectedChat } = useSelector((state: RootState) => state.chat);
   const { hash } = useSelector((state: RootState) => state.user);
   const { top, bottom } = useSafeAreaInsets();
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<TMessage[]>([]);
   const [messageText, setMessageText] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const flatListRef = useRef<FlatList>(null);
@@ -79,7 +69,7 @@ const MessageScreen = () => {
       // Assuming the API returns the created message under "message"
 
       console.log("response.data", JSON.stringify(response.data, null, 2));
-      const newMessage: Message = response.data.data;
+      const newMessage: TMessage = response.data.data;
 
       setMessages((prevMessages) => [newMessage, ...prevMessages]);
       setMessageText("");
@@ -92,7 +82,7 @@ const MessageScreen = () => {
   };
 
   // Render each message bubble
-  const renderMessageItem = ({ item }: { item: Message }) => {
+  const renderMessageItem = ({ item }: { item: TMessage }) => {
     const isCurrentUser = item?.sender?._id === hash;
     return (
       <View style={[styles.messageBubble, isCurrentUser ? styles.sentBubble : styles.receivedBubble]}>
