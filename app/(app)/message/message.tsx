@@ -11,6 +11,7 @@ import { TMessage } from "@/types/message/message.type";
 import { TError } from "@/types/error/error.type";
 import { addNewMessage, setMessages } from "@/redux/messageReducer/messageReducer";
 import { padding } from "@/constants/sizes";
+import SingleMessage from "@/components/messageCom/SingleMessage";
 
 const MessageScreen = () => {
   const { selectedChat } = useSelector((state: RootState) => state.chat);
@@ -63,17 +64,7 @@ const MessageScreen = () => {
   // Render each message bubble
   const renderMessageItem = ({ item }: { item: TMessage }) => {
     const isCurrentUser = item?.sender?._id === user?._id;
-    return (
-      <View style={[styles.messageBubble, isCurrentUser ? styles.sentBubble : styles.receivedBubble]}>
-        <Text style={styles.messageText}>{item.text}</Text>
-        <Text style={styles.timeText}>
-          {new Date(item.createdAt).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </Text>
-      </View>
-    );
+    return <SingleMessage message={item} isCurrentUser={isCurrentUser} />;
   };
 
   return (
@@ -151,29 +142,7 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingVertical: 10,
   },
-  messageBubble: {
-    maxWidth: "80%",
-    padding: 10,
-    borderRadius: 10,
-  },
-  sentBubble: {
-    alignSelf: "flex-end",
-    backgroundColor: Colors.bg, // Change as desired for sent messages
-  },
-  receivedBubble: {
-    alignSelf: "flex-start",
-    backgroundColor: "#555", // Change as desired for received messages
-  },
-  messageText: {
-    color: Colors.white,
-    fontSize: 16,
-  },
-  timeText: {
-    color: "#ccc",
-    fontSize: 10,
-    textAlign: "right",
-    marginTop: 4,
-  },
+
   inputContainer: {
     flexDirection: "row",
     alignItems: "flex-end",
