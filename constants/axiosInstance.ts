@@ -1,4 +1,5 @@
 import { store } from "@/redux/store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 // Define your base URL here
@@ -11,30 +12,21 @@ const axiosInstance = axios.create({
   timeout: 10000, // 10 seconds
   headers: {
     "Content-Type": "application/json",
-    "user-hash": store.getState().user.hash,
   },
 });
 
-axiosInstance.interceptors.request.use((config) => {
-  const hash = store.getState().user.hash; // Fetch latest hash from Redux store
-  if (hash) {
-    config.headers["user-hash"] = hash;
-  }
-  return config;
-});
-
-// // // Optional: Add request interceptor for adding dynamic headers or tokens
-// axiosInstance.interceptors.request.use(
-//   (config) => {
-//     // Example: Add authentication token dynamically
-//     // const token = localStorage.getItem('token');
-//     // if (token) {
-//     //   config.headers.Authorization = `Bearer ${token}`;
-//     // }
-//     return config;
-//   },
-//   (error) => Promise.reject(error)
-// );
+// // Optional: Add request interceptor for adding dynamic headers or tokens
+axiosInstance.interceptors.request.use(
+  async (config) => {
+    const tokenJson = await AsyncStorage.getItem("globalData");
+    const token = tokenJson ? JSON.parse(tokenJson).accessToken : null;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // Optional: Add response interceptor for global error handling
 axiosInstance.interceptors.response.use(

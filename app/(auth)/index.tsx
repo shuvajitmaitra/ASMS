@@ -8,7 +8,7 @@ import { router, Stack } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
-import { handleCopyText } from "@/utils/commonFunction";
+import { handleCopyText, showToast } from "@/utils/commonFunction";
 import Loading from "@/components/ui/Loading";
 import { borderRadius, buttonHeights, fontSizes, gWidth, margin, padding } from "@/constants/sizes";
 import { useGlobalContext } from "@/hooks/useGlobalContext";
@@ -105,7 +105,7 @@ const LoginScreen = () => {
     await axiosInstance
       .post("/user/login", { username: globalData.username, password: globalData.password, pin: globalData.pin })
       .then((response) => {
-        console.log("response.data", JSON.stringify(response.data, null, 2));
+        // console.log("response.data", JSON.stringify(response.data, null, 2));
         setGlobalData({
           ...globalData!,
           refreshToken: response.data.token.refreshToken,
@@ -113,9 +113,11 @@ const LoginScreen = () => {
         });
 
         dispatch(setPin(response.data.pin));
+        showToast({ message: "Logged in successfully", color: Colors.white, background: Colors.primary });
       })
       .catch((error) => {
         console.log("error", JSON.stringify(error.response.data, null, 2));
+        showToast({ message: error.response.data.message, color: Colors.white, background: Colors.primary });
       });
   };
   if (hash) {

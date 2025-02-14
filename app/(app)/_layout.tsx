@@ -8,11 +8,11 @@ import { useGlobalContext } from "@/hooks/useGlobalContext";
 export default function AppLayout() {
   const { globalData } = useGlobalContext();
   const dispatch = useDispatch();
-  useEffect(() => {
-    // resetStore();
-    // dispatch(setHash("67968683093d1d74816c8a51"));
-    return () => {};
-  }, []);
+  // useEffect(() => {
+  //   // resetStore();
+  //   // dispatch(setHash("67968683093d1d74816c8a51"));
+  //   return () => {};
+  // }, []);
 
   if (!globalData.username || !globalData.pin || !globalData.password) {
     return <Redirect href="/(auth)" />;

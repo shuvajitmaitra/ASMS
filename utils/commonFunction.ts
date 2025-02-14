@@ -8,7 +8,7 @@ import { Share } from "react-native";
 export const handleLogout = () => {
   resetStore(); // Directly call the resetStore function
   AsyncStorage.clear();
-  router.replace("/login");
+  router.replace("/(auth)");
 };
 
 type ToastOptions = {
@@ -24,6 +24,8 @@ export const showToast = ({ message, color, background }: ToastOptions): void =>
     position: "bottom",
     props: { color, background },
   });
+
+  console.log("toast called");
 };
 
 export const handleCopyText = async (text: string) => {
