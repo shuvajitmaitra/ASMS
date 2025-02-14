@@ -2,6 +2,7 @@ import { store } from "@/redux/store";
 import axiosInstance from "./axiosInstance";
 import { setHash, setPin } from "@/redux/userReducer/userReducer";
 import { setChats } from "@/redux/chatReducer/chatReducer";
+import { setMessages } from "@/redux/messageReducer/messageReducer";
 
 export const handleRegister = async ({
   displayName,
@@ -41,3 +42,21 @@ export const getChats = async () => {
       console.log("error", JSON.stringify(error.response.data, null, 2));
     });
 };
+
+// export const InitialMessagesLoad = async (chatId: string) => {
+//   await axiosInstance
+//     .get("/message/get-messages", {
+//       params: {
+//         chatId: chatId,
+//         limit: 2,
+//         skip: 2,
+//       },
+//     })
+//     .then((response) => {
+//       console.log("messages", JSON.stringify(response.data, null, 2));
+//       store.dispatch(setMessages({ chatId, messages: response.data.data.reverse() }));
+//     })
+//     .catch((error) => {
+//       console.log("error", JSON.stringify(error.response.data, null, 2));
+//     });
+// };
