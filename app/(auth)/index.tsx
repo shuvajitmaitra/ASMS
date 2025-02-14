@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Pressable } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { setDisplayName, setPin, setUser } from "@/redux/userReducer/userReducer";
+import { setAccessToken, setRefreshToken, setUser } from "@/redux/userReducer/userReducer";
 import { RootState } from "@/redux/store";
-import { handleRegister } from "@/constants/ApiCall";
 import { router, Stack } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
@@ -11,32 +10,18 @@ import { LinearGradient } from "expo-linear-gradient";
 import { handleCopyText, showToast } from "@/utils/commonFunction";
 import Loading from "@/components/ui/Loading";
 import { borderRadius, buttonHeights, fontSizes, gWidth, margin, padding } from "@/constants/sizes";
-import { useGlobalContext } from "@/hooks/useGlobalContext";
 import axiosInstance from "@/constants/axiosInstance";
 type logInfoType = {
   username: string;
   password: string;
   pin: string;
-  setIsLoading: (isLoading: boolean) => void;
 };
 
 const LoginScreen = () => {
   const [logInfo, setLogInfo] = useState<logInfoType | null>(null);
-  const { globalData, setGlobalData } = useGlobalContext();
 
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  const { displayName, hash } = useSelector((state: RootState) => state.user);
-
-  // Handle PIN Submission
-  const handlePinSubmit = async () => {
-    if (logInfo?.pin.length !== 4) {
-      Alert.alert("Invalid PIN", "PIN must be exactly 4 digits");
-      return;
-    }
-    dispatch(setPin(logInfo?.pin));
-    // await handleRegister({ displayName, pin: logInfo?.pin, setIsLoading });
-  };
 
   // If hash is present, navigate to app screen
   if (false) {
@@ -105,58 +90,27 @@ const LoginScreen = () => {
     await axiosInstance
       .post("/user/login", logInfo)
       .then((response) => {
-        console.log("response.data", JSON.stringify(response.data, null, 2));
         if (response.data.success) {
-          setGlobalData({
-            ...globalData!,
-            ...response.data.token,
-            ...response.data.data,
-          });
-          dispatch(setUser({ ...response.data.data, ...response.data.token }));
-          dispatch(setPin(response.data.pin));
+          console.log("response.data", JSON.stringify(response.data, null, 2));
+          dispatch(setAccessToken(response.data.token.accessToken));
+          dispatch(setRefreshToken(response.data.token.refreshToken));
+          dispatch(setUser(response.data.data));
           showToast({ message: "Logged in successfully", color: Colors.white, background: Colors.primary });
-          router.replace("/(app)");
+          // router.replace("/(app)");
         }
         // console.log("response.data", JSON.stringify(response.data, null, 2));
       })
       .catch((error) => {
-        console.log("error", JSON.stringify(error.response.data, null, 2));
+        console.log("error to login user", JSON.stringify(error.response.data, null, 2));
         showToast({ message: error.response.data.message, color: Colors.white, background: Colors.primary });
       });
   };
-  if (hash) {
-    return (
-      <LinearGradient colors={[Colors.bg, "transparent"]} style={styles.container}>
-        <Text style={styles.infoText}>
-          Please copy and securely save this hash to recover your account in the future. If you lose it, you may not be able to regain
-          access to your account.
-        </Text>
-        <View style={styles.infoContainer}>
-          <Text style={styles.infoText}>{hash}</Text>
-          <Feather onPress={() => handleCopyText(hash)} name="copy" size={24} color={Colors.body} />
-        </View>
 
-        <TouchableOpacity style={styles.signInButton} onPress={() => router.push("/(app)")}>
-          <Text style={styles.signInButtonText}>Next</Text>
-        </TouchableOpacity>
-      </LinearGradient>
-    );
-  }
-
-  // if (true) {
-  //   return (
-  //     <SkeletonGroup numberOfItems={4} direction="row" stagger={{ delay: 30 }}>
-  //       <Skeleton w={20} h={20} bR={50} />
-  //     </SkeletonGroup>
-  //   );
-  // }
-
-  // If username (displayName) exists, show PIN input
   if (false) {
     return (
       <LinearGradient colors={[Colors.bg, "transparent"]} style={styles.container}>
         <Pressable style={styles.backButton}>
-          <Feather onPress={() => dispatch(setDisplayName(""))} name="arrow-left" size={24} color={Colors.white} />
+          <Feather onPress={() => {}} name="arrow-left" size={24} color={Colors.white} />
         </Pressable>
         <TextInput
           style={styles.input}

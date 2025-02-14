@@ -1,55 +1,99 @@
+// axiosInstance.ts
+import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { store } from "@/redux/store";
-import { TUser } from "@/types/user/userTypes";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
+import { setAccessToken, setRefreshToken } from "@/redux/userReducer/userReducer";
 
-// Define your base URL here
 const production = true;
-// const production = true;
 const BASE_URL = production ? "https://sms-backend-tawny.vercel.app/api/v1" : "http://10.0.2.2:5001/api/v1";
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000, // 10 seconds
+  timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// // Optional: Add request interceptor for adding dynamic headers or tokens
-axiosInstance.interceptors.request.use(
-  async (config) => {
-    const { accessToken } = store.getState().user.user || {};
-    if (Boolean(accessToken)) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-      return config;
+interface FailedRequest {
+  resolve: (token: string | null) => void;
+  reject: (error: any) => void;
+}
+
+let isRefreshing = false;
+let failedQueue: FailedRequest[] = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
     }
-    const tokenJson = await AsyncStorage.getItem("globalData");
-    const token = tokenJson ? JSON.parse(tokenJson).accessToken : null;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  });
+  failedQueue = [];
+};
+
+axiosInstance.interceptors.request.use(
+  async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
+    config.headers = config.headers || axios.AxiosHeaders.from({});
+    const { accessToken } = store.getState().user;
+    if (accessToken) {
+      config.headers.set("Authorization", `Bearer ${accessToken}`);
     }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Optional: Add response interceptor for global error handling
 axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // Handle common error scenarios
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      console.error("Data:", error.response.data);
-      console.error("Status:", error.response.status);
-    } else if (error.request) {
-      // The request was made but no response was received
-      console.error("No response received");
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.error("Error:", error.message);
+  (response: AxiosResponse): AxiosResponse => response,
+  async (error: AxiosError): Promise<any> => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      if (originalRequest._retry) {
+        return Promise.reject(error);
+      }
+      originalRequest._retry = true;
+
+      if (isRefreshing) {
+        return new Promise<AxiosResponse>((resolve, reject) => {
+          failedQueue.push({
+            resolve: (token: string | null) => {
+              if (token && originalRequest.headers) {
+                originalRequest.headers.set("Authorization", `Bearer ${token}`);
+              }
+              resolve(axiosInstance(originalRequest));
+            },
+            reject,
+          });
+        });
+      }
+
+      isRefreshing = true;
+      try {
+        const { refreshToken } = store.getState().user;
+        if (!refreshToken) {
+          throw new Error("No refresh token available");
+        }
+
+        const response = await axios.post(`${BASE_URL}/user/refresh`, { refreshToken });
+        const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data;
+
+        store.dispatch(setAccessToken(newAccessToken));
+        store.dispatch(setRefreshToken(newRefreshToken));
+
+        processQueue(null, newAccessToken);
+        if (originalRequest.headers) {
+          originalRequest.headers.set("Authorization", `Bearer ${newAccessToken}`);
+        }
+        return axiosInstance(originalRequest);
+      } catch (err) {
+        processQueue(err, null);
+        return Promise.reject(err);
+      } finally {
+        isRefreshing = false;
+      }
     }
     return Promise.reject(error);
   }

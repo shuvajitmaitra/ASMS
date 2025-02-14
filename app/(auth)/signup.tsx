@@ -1,17 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Pressable } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { setDisplayName, setPin } from "@/redux/userReducer/userReducer";
-import { RootState } from "@/redux/store";
+import { Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { useDispatch } from "react-redux";
 import { handleRegister } from "@/constants/ApiCall";
 import { router, Stack } from "expo-router";
-import { Feather } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
-import { handleCopyText } from "@/utils/commonFunction";
-import Loading from "@/components/ui/Loading";
-import { borderRadius, buttonHeights, fontSizes } from "@/constants/sizes";
-import { useGlobalContext } from "@/hooks/useGlobalContext";
+import { buttonHeights, fontSizes } from "@/constants/sizes";
 type logInfoType = {
   displayName: string;
   userName: string;

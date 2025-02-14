@@ -12,13 +12,11 @@ import { handleShare } from "@/utils/commonFunction";
 const CreateChatModal = ({ visible, onClose }: { visible: boolean; onClose: () => void }) => {
   const [hashId, setHashId] = useState<string>("");
   const dispatch = useDispatch();
-  const { hash } = useSelector((state: RootState) => state.user);
 
   const handleCreateChat = () => {
     axiosInstance
       .post("/chat/create", {
         hash: hashId,
-        myHash: hash,
       })
       .then((response) => {
         console.log("response.data", JSON.stringify(response.data, null, 2));
@@ -26,7 +24,7 @@ const CreateChatModal = ({ visible, onClose }: { visible: boolean; onClose: () =
         onClose();
       })
       .catch((error) => {
-        console.log("error", JSON.stringify(error.response.data, null, 2));
+        console.log("error to create chat", JSON.stringify(error.response.data, null, 2));
       });
   };
   return (
@@ -45,11 +43,7 @@ const CreateChatModal = ({ visible, onClose }: { visible: boolean; onClose: () =
             setHashId(text);
           }}
         />
-        <TouchableOpacity
-          onPress={() => {
-            handleShare(hash);
-          }}
-        >
+        <TouchableOpacity onPress={() => {}}>
           <Text>Invite to your friends</Text>
         </TouchableOpacity>
         <Button title="Create Chat" onPress={handleCreateChat} />

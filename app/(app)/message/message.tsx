@@ -15,8 +15,8 @@ import { padding } from "@/constants/sizes";
 const MessageScreen = () => {
   const { selectedChat } = useSelector((state: RootState) => state.chat);
   const { messages } = useSelector((state: RootState) => state.message);
-  const { hash } = useSelector((state: RootState) => state.user);
-  const { top, bottom } = useSafeAreaInsets();
+  const { user } = useSelector((state: RootState) => state.user);
+  const { top } = useSafeAreaInsets();
   const [messageText, setMessageText] = useState<string>("");
   const flatListRef = useRef<FlatList>(null);
   const [page, setPage] = useState(1);
@@ -35,7 +35,7 @@ const MessageScreen = () => {
         });
         dispatch(setMessages({ chatId: selectedChat._id, messages: response.data.data, page: page }));
       } catch (error: TError | any) {
-        console.log("error", JSON.stringify(error.response.data, null, 2));
+        console.log("error to get messages", JSON.stringify(error.response.data, null, 2));
       }
     };
 
@@ -56,13 +56,13 @@ const MessageScreen = () => {
       dispatch(addNewMessage({ chatId: selectedChat._id, message: newMessage }));
       setMessageText("");
     } catch (error: any) {
-      console.log("error", JSON.stringify(error.response.data, null, 2));
+      console.log("error to send messages", JSON.stringify(error.response.data, null, 2));
     }
   };
 
   // Render each message bubble
   const renderMessageItem = ({ item }: { item: TMessage }) => {
-    const isCurrentUser = item?.sender?._id === hash;
+    const isCurrentUser = item?.sender?._id === user?._id;
     return (
       <View style={[styles.messageBubble, isCurrentUser ? styles.sentBubble : styles.receivedBubble]}>
         <Text style={styles.messageText}>{item.text}</Text>

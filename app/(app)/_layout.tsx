@@ -2,11 +2,16 @@ import { Colors } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
 import { router, Stack } from "expo-router";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 export default function AppLayout() {
-  const { user } = useSelector((state: RootState) => state.user);
-  if (!user?.accessToken) {
-    router.replace("/(auth)");
-  }
+  const { accessToken } = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    if (!accessToken) {
+      router.replace("/(auth)");
+    }
+  }, [accessToken]);
+
   return (
     <Stack>
       <Stack.Screen
@@ -50,13 +55,6 @@ export default function AppLayout() {
           title: "tessss",
         }}
       />
-      {/* <Stack.Screen
-        name="screens/joincommunity"
-        options={{
-          // headerShown: false,
-          animation: "fade",
-        }}
-      /> */}
     </Stack>
   );
 }
