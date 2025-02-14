@@ -39,7 +39,7 @@ export default function RootLayout() {
           <ThemeProvider value={colorScheme === "light" ? DarkTheme : DefaultTheme}>
             <Slot />
             <StatusBar style="auto" />
-            <Toast config={toastConfig} />
+            <Toast config={toastConfig} autoHide={true} visibilityTime={1500} />
           </ThemeProvider>
         </PersistGate>
       </Provider>

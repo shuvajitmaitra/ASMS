@@ -12,6 +12,7 @@ import { StatusBar } from "expo-status-bar";
 import { TChat } from "@/types/chat/chat.types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { borderRadius, margin, padding } from "@/constants/sizes";
+import { showToast } from "@/utils/commonFunction";
 
 // Define the type for each chat item
 
@@ -62,8 +63,13 @@ const ChatScreen: React.FC = () => {
       <StatusBar />
       <View style={[styles.header, { paddingTop: top }]}>
         <Text style={styles.headerTitle}>Chats</Text>
-        <TouchableOpacity onPress={() => router.push("/(app)/profile/profile")}>
-          <Ionicons name="person-circle-outline" size={28} color="#fff" />
+        <TouchableOpacity
+          onPress={() => {
+            // showToast({ message: "Profile", color: Colors.white, background: Colors.primary });
+            router.push("/(app)/profile/profile");
+          }}
+        >
+          <Ionicons name="person-circle-outline" size={40} color={Colors.primary} />
         </TouchableOpacity>
       </View>
 
