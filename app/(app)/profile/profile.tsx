@@ -37,14 +37,15 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
+    alignSelf: "center",
     backgroundColor: Colors.primary,
     height: 40,
   },
   subContainer: {},
   container: {
-    // justifyContent: "center",
-    // alignItems: "center",
-    backgroundColor: "red",
+    backgroundColor: Colors.body,
     flex: 1,
+    paddingTop: 20,
+    position: "relative",
   },
 });

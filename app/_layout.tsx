@@ -8,10 +8,11 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Provider } from "react-redux";
-import { store } from "@/redux/store";
+import { persistor, store } from "@/redux/store";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "@/utils/toastConfig";
 import { GlobalProvider } from "@/hooks/useGlobalContext";
+import { PersistGate } from "redux-persist/integration/react";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -34,11 +35,13 @@ export default function RootLayout() {
   return (
     <GlobalProvider>
       <Provider store={store}>
-        <ThemeProvider value={colorScheme === "light" ? DarkTheme : DefaultTheme}>
-          <Slot />
-          <StatusBar style="auto" />
-          <Toast config={toastConfig} />
-        </ThemeProvider>
+        <PersistGate loading={null} persistor={persistor}>
+          <ThemeProvider value={colorScheme === "light" ? DarkTheme : DefaultTheme}>
+            <Slot />
+            <StatusBar style="auto" />
+            <Toast config={toastConfig} />
+          </ThemeProvider>
+        </PersistGate>
       </Provider>
     </GlobalProvider>
   );

@@ -58,6 +58,7 @@ const ChatScreen: React.FC = () => {
   const { chats }: { chats: ChatData[] } = useSelector((state: RootState) => state.chat);
 
   useLayoutEffect(() => {
+    console.log("chats", JSON.stringify(chats, null, 2));
     getChats();
     return () => {
       // Clean up if necessary

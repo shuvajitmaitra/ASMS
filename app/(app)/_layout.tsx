@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors";
 import { Stack } from "expo-router";
 export default function AppLayout() {
   return (
@@ -19,9 +20,12 @@ export default function AppLayout() {
         name="profile/profile"
         options={{
           headerShown: false,
-          contentStyle: { backgroundColor: "transparent" },
+          contentStyle: { backgroundColor: Colors.bg },
           presentation: "formSheet",
           sheetAllowedDetents: "fitToContents",
+          gestureEnabled: true,
+          sheetCornerRadius: 20,
+          sheetGrabberVisible: true,
         }}
       />
       <Stack.Screen

@@ -11,7 +11,7 @@ export default Grabber;
 const styles = StyleSheet.create({
   container: {
     height: 7,
-    backgroundColor: Colors.border,
+    backgroundColor: Colors.primary,
     position: "absolute",
     width: 50,
     top: 7,

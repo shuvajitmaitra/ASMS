@@ -20,7 +20,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   async (config) => {
     const { accessToken } = store.getState().user.user || {};
-    if (accessToken) {
+    if (Boolean(accessToken)) {
       config.headers.Authorization = `Bearer ${accessToken}`;
       return config;
     }
