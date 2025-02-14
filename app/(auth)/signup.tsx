@@ -51,6 +51,7 @@ const SignupScreen = () => {
         placeholder="Enter display name"
         placeholderTextColor="#A0A0A0"
         value={globalData?.displayName || ""}
+        autoCapitalize="none"
         onChangeText={(text) => setGlobalData({ ...globalData!, displayName: text })}
       />
       <TextInput
@@ -85,7 +86,7 @@ const SignupScreen = () => {
         <Text style={styles.signInButtonText}>Sign up</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.push("/login")}>
+      <TouchableOpacity onPress={() => router.push("/(auth)")}>
         <Text style={styles.recoverText}>Already have an account? Login</Text>
       </TouchableOpacity>
     </LinearGradient>

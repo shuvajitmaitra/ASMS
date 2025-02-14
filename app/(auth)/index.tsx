@@ -11,6 +11,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { handleCopyText } from "@/utils/commonFunction";
 import Loading from "@/components/ui/Loading";
 import { borderRadius, buttonHeights, fontSizes, gWidth, margin, padding } from "@/constants/sizes";
+import { useGlobalContext } from "@/hooks/useGlobalContext";
+import axiosInstance from "@/constants/axiosInstance";
 type logInfoType = {
   userName: string;
   password: string;
@@ -20,6 +22,7 @@ type logInfoType = {
 
 const LoginScreen = () => {
   const [logInfo, setLogInfo] = useState<logInfoType | null>(null);
+  const { globalData, setGlobalData } = useGlobalContext();
 
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -98,7 +101,23 @@ const LoginScreen = () => {
       </View>
     );
   }
+  const handleLogin = async () => {
+    await axiosInstance
+      .post("/user/login", { username: globalData.username, password: globalData.password, pin: globalData.pin })
+      .then((response) => {
+        console.log("response.data", JSON.stringify(response.data, null, 2));
+        setGlobalData({
+          ...globalData!,
+          refreshToken: response.data.token.refreshToken,
+          accessToken: response.data.token.accessToken,
+        });
 
+        dispatch(setPin(response.data.pin));
+      })
+      .catch((error) => {
+        console.log("error", JSON.stringify(error.response.data, null, 2));
+      });
+  };
   if (hash) {
     return (
       <LinearGradient colors={[Colors.bg, "transparent"]} style={styles.container}>
@@ -166,15 +185,16 @@ const LoginScreen = () => {
         style={styles.input}
         placeholder="Enter unique username"
         placeholderTextColor="#A0A0A0"
-        value={logInfo?.userName || ""}
-        onChangeText={(text) => setLogInfo({ ...logInfo!, userName: text })}
+        value={globalData?.username || ""}
+        autoCapitalize="none"
+        onChangeText={(text) => setGlobalData({ ...globalData!, username: text })}
       />
       <TextInput
         style={styles.input}
         placeholder="Enter password"
         placeholderTextColor="#A0A0A0"
-        value={logInfo?.password || ""}
-        onChangeText={(text) => setLogInfo({ ...logInfo!, password: text })}
+        value={globalData?.password || ""}
+        onChangeText={(text) => setGlobalData({ ...globalData!, password: text })}
       />
       <TextInput
         style={styles.input}
@@ -182,18 +202,23 @@ const LoginScreen = () => {
         placeholder="Enter PIN"
         keyboardType="number-pad"
         placeholderTextColor={Colors.body}
-        value={logInfo?.pin || ""}
-        onChangeText={(text) => setLogInfo({ ...logInfo!, pin: text })}
+        value={globalData?.pin || ""}
+        onChangeText={(text) => setGlobalData({ ...globalData!, pin: text })}
       />
-      <TouchableOpacity style={styles.signInButton} onPress={() => {}}>
+      <TouchableOpacity
+        style={styles.signInButton}
+        onPress={() => {
+          handleLogin();
+        }}
+      >
         <Text style={styles.signInButtonText}>Next</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.push("/screens/recover/recover")}>
+      <TouchableOpacity onPress={() => router.push("/(auth)/recover")}>
         <Text style={styles.recoverText}>Recover your account</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.push("/screens/signup")}>
+      <TouchableOpacity onPress={() => router.push("/(auth)/signup")}>
         <Text style={styles.recoverText}>Create your account</Text>
       </TouchableOpacity>
     </LinearGradient>

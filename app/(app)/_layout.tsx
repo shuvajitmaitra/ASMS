@@ -4,8 +4,9 @@ import { resetStore, RootState } from "@/redux/store";
 import { useEffect } from "react";
 import Header from "@/components/ui/Header";
 import { Colors } from "@/constants/Colors";
+import { useGlobalContext } from "@/hooks/useGlobalContext";
 export default function AppLayout() {
-  const { hash } = useSelector((state: RootState) => state.user);
+  const { globalData } = useGlobalContext();
   const dispatch = useDispatch();
   useEffect(() => {
     // resetStore();
@@ -13,8 +14,8 @@ export default function AppLayout() {
     return () => {};
   }, []);
 
-  if (!hash) {
-    return <Redirect href="/login" />;
+  if (!globalData.username || !globalData.pin || !globalData.password) {
+    return <Redirect href="/(auth)" />;
   }
 
   return (
