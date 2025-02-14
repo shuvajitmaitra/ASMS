@@ -1,4 +1,5 @@
 import { store } from "@/redux/store";
+import { TUser } from "@/types/user/userTypes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
@@ -18,6 +19,11 @@ const axiosInstance = axios.create({
 // // Optional: Add request interceptor for adding dynamic headers or tokens
 axiosInstance.interceptors.request.use(
   async (config) => {
+    const { accessToken } = store.getState().user.user || {};
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+      return config;
+    }
     const tokenJson = await AsyncStorage.getItem("globalData");
     const token = tokenJson ? JSON.parse(tokenJson).accessToken : null;
     if (token) {

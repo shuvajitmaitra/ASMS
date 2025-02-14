@@ -14,17 +14,11 @@ interface GlobalContextType {
   setGlobalData: React.Dispatch<React.SetStateAction<GlobalData>>;
 }
 
-// Set default values for your global state
-const defaultGlobalData: GlobalData = {
-  text: "",
-};
-
-// Create the context with an initial undefined value
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
 // Create the provider component
 export const GlobalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [globalData, setGlobalData] = useState<GlobalData>(defaultGlobalData);
+  const [globalData, setGlobalData] = useState<GlobalData>({});
 
   // Load persisted global data when the provider mounts
   useEffect(() => {

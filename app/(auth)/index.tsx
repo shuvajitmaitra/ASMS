@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Pressable } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { setDisplayName, setPin } from "@/redux/userReducer/userReducer";
+import { setDisplayName, setPin, setUser } from "@/redux/userReducer/userReducer";
 import { RootState } from "@/redux/store";
 import { handleRegister } from "@/constants/ApiCall";
 import { router, Stack } from "expo-router";
@@ -14,7 +14,7 @@ import { borderRadius, buttonHeights, fontSizes, gWidth, margin, padding } from 
 import { useGlobalContext } from "@/hooks/useGlobalContext";
 import axiosInstance from "@/constants/axiosInstance";
 type logInfoType = {
-  userName: string;
+  username: string;
   password: string;
   pin: string;
   setIsLoading: (isLoading: boolean) => void;
@@ -103,17 +103,21 @@ const LoginScreen = () => {
   }
   const handleLogin = async () => {
     await axiosInstance
-      .post("/user/login", { username: globalData.username, password: globalData.password, pin: globalData.pin })
+      .post("/user/login", logInfo)
       .then((response) => {
+        console.log("response.data", JSON.stringify(response.data, null, 2));
+        if (response.data.success) {
+          setGlobalData({
+            ...globalData!,
+            ...response.data.token,
+            ...response.data.data,
+          });
+          dispatch(setUser({ ...response.data.data, ...response.data.token }));
+          dispatch(setPin(response.data.pin));
+          showToast({ message: "Logged in successfully", color: Colors.white, background: Colors.primary });
+          router.replace("/(app)");
+        }
         // console.log("response.data", JSON.stringify(response.data, null, 2));
-        setGlobalData({
-          ...globalData!,
-          refreshToken: response.data.token.refreshToken,
-          accessToken: response.data.token.accessToken,
-        });
-
-        dispatch(setPin(response.data.pin));
-        showToast({ message: "Logged in successfully", color: Colors.white, background: Colors.primary });
       })
       .catch((error) => {
         console.log("error", JSON.stringify(error.response.data, null, 2));
@@ -187,16 +191,16 @@ const LoginScreen = () => {
         style={styles.input}
         placeholder="Enter unique username"
         placeholderTextColor="#A0A0A0"
-        value={globalData?.username || ""}
+        value={logInfo?.username || ""}
         autoCapitalize="none"
-        onChangeText={(text) => setGlobalData({ ...globalData!, username: text })}
+        onChangeText={(text) => setLogInfo({ ...logInfo!, username: text })}
       />
       <TextInput
         style={styles.input}
         placeholder="Enter password"
         placeholderTextColor="#A0A0A0"
-        value={globalData?.password || ""}
-        onChangeText={(text) => setGlobalData({ ...globalData!, password: text })}
+        value={logInfo?.password || ""}
+        onChangeText={(text) => setLogInfo({ ...logInfo!, password: text })}
       />
       <TextInput
         style={styles.input}
@@ -204,8 +208,8 @@ const LoginScreen = () => {
         placeholder="Enter PIN"
         keyboardType="number-pad"
         placeholderTextColor={Colors.body}
-        value={globalData?.pin || ""}
-        onChangeText={(text) => setGlobalData({ ...globalData!, pin: text })}
+        value={logInfo?.pin || ""}
+        onChangeText={(text) => setLogInfo({ ...logInfo!, pin: text })}
       />
       <TouchableOpacity
         style={styles.signInButton}

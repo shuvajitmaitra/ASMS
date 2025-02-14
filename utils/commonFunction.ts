@@ -5,10 +5,20 @@ import Toast from "react-native-toast-message";
 import * as Clipboard from "expo-clipboard";
 import { Share } from "react-native";
 
-export const handleLogout = () => {
-  resetStore(); // Directly call the resetStore function
-  AsyncStorage.clear();
-  router.replace("/(auth)");
+export const handleLogout = async () => {
+  try {
+    resetStore();
+    await AsyncStorage.removeItem("globalData");
+    await AsyncStorage.clear();
+    router.replace("/(auth)");
+  } catch (error) {
+    console.error("Logout error:", error);
+    showToast({
+      message: "Logout failed",
+      color: "white",
+      background: "red",
+    });
+  }
 };
 
 type ToastOptions = {

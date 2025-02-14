@@ -34,7 +34,7 @@ export const getChats = async () => {
   await axiosInstance
     .get("/chat")
     .then((response) => {
-      console.log("response.data", JSON.stringify(response.data, null, 2));
+      console.log("chats", JSON.stringify(response.data, null, 2));
       store.dispatch(setChats(response.data));
     })
     .catch((error) => {

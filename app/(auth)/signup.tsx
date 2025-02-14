@@ -21,7 +21,7 @@ type logInfoType = {
 };
 
 const SignupScreen = () => {
-  const { globalData, setGlobalData } = useGlobalContext();
+  const [logInfo, setLogInfo] = useState<logInfoType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const dispatch = useDispatch();
@@ -29,10 +29,10 @@ const SignupScreen = () => {
   // Handle PIN Submission
   const handleSignup = async () => {
     await handleRegister({
-      displayName: globalData.displayName || "",
-      pin: globalData.pin || "",
-      password: globalData.password || "",
-      username: globalData.userName || "",
+      displayName: logInfo?.displayName || "",
+      pin: logInfo?.pin || "",
+      password: logInfo?.password || "",
+      username: logInfo?.userName || "",
       setIsLoading,
     });
   };
@@ -50,23 +50,23 @@ const SignupScreen = () => {
         style={styles.input}
         placeholder="Enter display name"
         placeholderTextColor="#A0A0A0"
-        value={globalData?.displayName || ""}
+        value={logInfo?.displayName || ""}
         autoCapitalize="none"
-        onChangeText={(text) => setGlobalData({ ...globalData!, displayName: text })}
+        onChangeText={(text) => setLogInfo({ ...logInfo!, displayName: text })}
       />
       <TextInput
         style={styles.input}
         placeholder="Enter unique username"
         placeholderTextColor="#A0A0A0"
-        value={globalData?.userName || ""}
-        onChangeText={(text) => setGlobalData({ ...globalData!, userName: text })}
+        value={logInfo?.userName || ""}
+        onChangeText={(text) => setLogInfo({ ...logInfo!, userName: text })}
       />
       <TextInput
         style={styles.input}
         placeholder="Enter password"
         placeholderTextColor="#A0A0A0"
-        value={globalData?.password || ""}
-        onChangeText={(text) => setGlobalData({ ...globalData!, password: text })}
+        value={logInfo?.password || ""}
+        onChangeText={(text) => setLogInfo({ ...logInfo!, password: text })}
       />
       <TextInput
         style={styles.input}
@@ -74,8 +74,8 @@ const SignupScreen = () => {
         placeholder="Enter PIN"
         keyboardType="number-pad"
         placeholderTextColor={Colors.body}
-        value={globalData?.pin || ""}
-        onChangeText={(text) => setGlobalData({ ...globalData!, pin: text })}
+        value={logInfo?.pin || ""}
+        onChangeText={(text) => setLogInfo({ ...logInfo!, pin: text })}
       />
       <TouchableOpacity
         style={styles.signInButton}

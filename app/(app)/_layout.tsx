@@ -1,30 +1,11 @@
-import { Redirect, router, Stack } from "expo-router";
-import { useDispatch, useSelector } from "react-redux";
-import { resetStore, RootState } from "@/redux/store";
-import { useEffect } from "react";
-import Header from "@/components/ui/Header";
-import { Colors } from "@/constants/Colors";
-import { useGlobalContext } from "@/hooks/useGlobalContext";
+import { Stack } from "expo-router";
 export default function AppLayout() {
-  const { globalData } = useGlobalContext();
-  const dispatch = useDispatch();
-  // useEffect(() => {
-  //   // resetStore();
-  //   // dispatch(setHash("67968683093d1d74816c8a51"));
-  //   return () => {};
-  // }, []);
-
-  if (!globalData.username || !globalData.pin || !globalData.password) {
-    return <Redirect href="/(auth)" />;
-  }
-
   return (
     <Stack>
       <Stack.Screen
         name="index"
         options={{
           headerShown: false,
-          contentStyle: { backgroundColor: "red" },
         }}
       />
       <Stack.Screen
@@ -32,7 +13,6 @@ export default function AppLayout() {
         options={{
           headerShown: false,
           animation: "fade",
-          contentStyle: { backgroundColor: "blue" },
         }}
       />
       <Stack.Screen
@@ -41,6 +21,7 @@ export default function AppLayout() {
           headerShown: false,
           contentStyle: { backgroundColor: "transparent" },
           presentation: "formSheet",
+          sheetAllowedDetents: "fitToContents",
         }}
       />
       <Stack.Screen

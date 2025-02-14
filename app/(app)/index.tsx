@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput, SafeAreaView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { FlashList } from "@shopify/flash-list";
@@ -57,7 +57,7 @@ const ChatScreen: React.FC = () => {
 
   const { chats }: { chats: ChatData[] } = useSelector((state: RootState) => state.chat);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     getChats();
     return () => {
       // Clean up if necessary
