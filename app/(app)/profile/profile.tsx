@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     height: 40,
+    backgroundColor: Colors.primary,
   },
   subContainer: {
     padding: padding.default,

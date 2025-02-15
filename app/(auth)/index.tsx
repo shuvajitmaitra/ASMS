@@ -95,7 +95,7 @@ const LoginScreen = () => {
           dispatch(setRefreshToken(response.data.token.refreshToken));
           dispatch(setUser(response.data.data));
           showToast({ message: "Logged in successfully", color: Colors.white, background: Colors.primary });
-          // router.replace("/(app)");
+          router.replace("/(app)");
         }
         // console.log("response.data", JSON.stringify(response.data, null, 2));
       })
