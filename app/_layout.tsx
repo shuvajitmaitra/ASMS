@@ -13,6 +13,7 @@ import Toast from "react-native-toast-message";
 import { toastConfig } from "@/utils/toastConfig";
 import { GlobalProvider } from "@/hooks/useGlobalContext";
 import { PersistGate } from "redux-persist/integration/react";
+import { SocketProvider } from "@/hooks/useSocket";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -36,11 +37,13 @@ export default function RootLayout() {
     <GlobalProvider>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <ThemeProvider value={colorScheme === "light" ? DarkTheme : DefaultTheme}>
-            <Slot />
-            <StatusBar style="auto" />
-            <Toast config={toastConfig} autoHide={true} visibilityTime={1500} />
-          </ThemeProvider>
+          <SocketProvider>
+            <ThemeProvider value={colorScheme === "light" ? DarkTheme : DefaultTheme}>
+              <Slot />
+              <StatusBar style="auto" />
+              <Toast config={toastConfig} autoHide={true} visibilityTime={1500} />
+            </ThemeProvider>
+          </SocketProvider>
         </PersistGate>
       </Provider>
     </GlobalProvider>
