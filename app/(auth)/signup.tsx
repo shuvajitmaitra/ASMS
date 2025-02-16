@@ -6,6 +6,7 @@ import { router, Stack } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { buttonHeights, fontSizes } from "@/constants/sizes";
+import { showToast } from "@/utils/commonFunction";
 type logInfoType = {
   displayName: string;
   userName: string;
@@ -22,6 +23,26 @@ const SignupScreen = () => {
 
   // Handle PIN Submission
   const handleSignup = async () => {
+    if (!logInfo) {
+      return showToast({ message: "Please fill all the fields", color: Colors.white, background: Colors.primary });
+    }
+    if (logInfo.displayName && logInfo.displayName.length < 4) {
+      showToast({ message: "Please enter a valid name", color: Colors.white, background: Colors.primary });
+      return;
+    }
+    if (logInfo?.userName && logInfo.userName.length < 4) {
+      showToast({ message: "Username have to be more than 3 characters", color: Colors.white, background: Colors.primary });
+      return;
+    }
+    if (logInfo?.password && logInfo.password.length < 6) {
+      showToast({ message: "Password have to be more than 6 characters", color: Colors.white, background: Colors.primary });
+      return;
+    }
+    if (logInfo?.pin && logInfo.pin.length < 4) {
+      showToast({ message: "Required more than 3 digits", color: Colors.white, background: Colors.primary });
+      return;
+    }
+
     await handleRegister({
       displayName: logInfo?.displayName || "",
       pin: logInfo?.pin || "",
@@ -53,13 +74,16 @@ const SignupScreen = () => {
         placeholder="Enter unique username"
         placeholderTextColor="#A0A0A0"
         value={logInfo?.userName || ""}
-        onChangeText={(text) => setLogInfo({ ...logInfo!, userName: text })}
+        autoCapitalize="none"
+        textContentType="username"
+        onChangeText={(text) => setLogInfo({ ...logInfo!, userName: text.toLowerCase() })}
       />
       <TextInput
         style={styles.input}
         placeholder="Enter password"
         placeholderTextColor="#A0A0A0"
         value={logInfo?.password || ""}
+        textContentType="password"
         onChangeText={(text) => setLogInfo({ ...logInfo!, password: text })}
       />
       <TextInput

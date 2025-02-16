@@ -1,6 +1,9 @@
 import { store } from "@/redux/store";
 import axiosInstance from "./axiosInstance";
 import { setChats } from "@/redux/chatReducer/chatReducer";
+import { showToast } from "@/utils/commonFunction";
+import { Colors } from "./Colors";
+import { router } from "expo-router";
 
 export const handleRegister = async ({
   displayName,
@@ -18,8 +21,13 @@ export const handleRegister = async ({
   try {
     setIsLoading(true);
     const response = await axiosInstance.post("/user/register", { displayName, pin, password, username });
+    if (response.data.success) {
+      showToast({ message: "Registration successful", color: Colors.white, background: Colors.primary });
+      router.replace("/(auth)");
+    }
   } catch (error: any) {
-    console.error("Registration error", JSON.stringify(error.response?.data, null, 2));
+    // console.error("Registration error", JSON.stringify(error.response?.data, null, 2));
+    showToast({ message: error.response?.data.message, color: Colors.white, background: Colors.primary });
   } finally {
     setIsLoading(false);
   }
