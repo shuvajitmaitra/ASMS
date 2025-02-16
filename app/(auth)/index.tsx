@@ -11,6 +11,7 @@ import { handleCopyText, showToast } from "@/utils/commonFunction";
 import Loading from "@/components/ui/Loading";
 import { borderRadius, buttonHeights, fontSizes, gWidth, margin, padding } from "@/constants/sizes";
 import axiosInstance from "@/constants/axiosInstance";
+import { registerIndieID } from "native-notify";
 type logInfoType = {
   username: string;
   password: string;
@@ -87,10 +88,13 @@ const LoginScreen = () => {
     );
   }
   const handleLogin = async () => {
+    console.log("logInfo", JSON.stringify(logInfo, null, 2));
     await axiosInstance
       .post("/user/login", logInfo)
       .then((response) => {
         if (response.data.success) {
+          registerIndieID("shuvo", 27503, "DYq9JGic71pEzAFNhpfNsd");
+          console.log("response.data", JSON.stringify(response.data, null, 2));
           dispatch(setAccessToken(response.data.token.accessToken));
           dispatch(setRefreshToken(response.data.token.refreshToken));
           dispatch(setUser(response.data.data));

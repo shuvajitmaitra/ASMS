@@ -3,14 +3,13 @@ import { RootState } from "@/redux/store";
 import { router, Stack } from "expo-router";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { Redirect } from "expo-router";
 export default function AppLayout() {
   const { accessToken } = useSelector((state: RootState) => state.user);
 
-  useEffect(() => {
-    if (!accessToken) {
-      router.replace("/(auth)");
-    }
-  }, [accessToken]);
+  if (!accessToken) {
+    return <Redirect href="/(auth)" />;
+  }
 
   return (
     <Stack>

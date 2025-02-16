@@ -10,6 +10,7 @@ export const handleLogout = async () => {
     resetStore();
     await AsyncStorage.removeItem("globalData");
     await AsyncStorage.clear();
+    router.replace("/(auth)");
   } catch (error) {
     console.error("Logout error:", error);
     showToast({

@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput, SafeAreaView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { FlashList } from "@shopify/flash-list";
@@ -13,12 +13,39 @@ import { TChat } from "@/types/chat/chat.types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { borderRadius, margin, padding } from "@/constants/sizes";
 import { showToast } from "@/utils/commonFunction";
+import registerNNPushToken, { getIndieNotificationInbox, getPushDataObject } from "native-notify";
+import axios from "axios";
 
 // Define the type for each chat item
 
 const ChatScreen: React.FC = () => {
+  const { accessToken } = useSelector((state: RootState) => state.user);
+
+  const [data, setData] = useState<any>(null);
+
+  // useEffect(() => {
+  //   if (!accessToken) {
+  //     router.replace("/(auth)");
+  //   }
+  // }, [accessToken]);
   const dispatch = useDispatch();
   const { top } = useSafeAreaInsets();
+  registerNNPushToken(27503, "DYq9JGic71pEzAFNhpfNsd");
+  const dataObject = getPushDataObject();
+
+  useEffect(() => {
+    // const notifications = getIndieNotificationInbox("shuvajit", 27503, "DYq9JGic71pEzAFNhpfNsd", 10, 0);
+    // console.log("notifications: ", notifications);
+    axios
+      .get("http://192.168.1.103:5001/")
+      .then((response) => {
+        console.log("response", JSON.stringify(response.data, null, 2));
+      })
+      .catch((error) => {
+        console.log("error", JSON.stringify(error.response.data, null, 2));
+      });
+    console.log("dataObject", JSON.stringify(dataObject, null, 2));
+  }, []);
 
   const { chats }: { chats: TChat[] } = useSelector((state: RootState) => state.chat);
 

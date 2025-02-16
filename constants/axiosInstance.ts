@@ -3,8 +3,8 @@ import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "ax
 import { store } from "@/redux/store";
 import { setAccessToken, setRefreshToken } from "@/redux/userReducer/userReducer";
 
-const production = true;
-const BASE_URL = production ? "https://sms-backend-tawny.vercel.app/api/v1" : "http://10.0.2.2:5001/api/v1";
+const production = false;
+const BASE_URL = production ? "https://sms-backend-tawny.vercel.app/api/v1" : "http://192.168.1.103:5001/api/v1";
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,

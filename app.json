@@ -36,6 +36,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "a7e127c4-206b-49c3-9c10-a593ed79a372"
+      }
+    },
+    "owner": "shuvajitmaitra"
   }
 }
